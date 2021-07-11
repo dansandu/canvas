@@ -6,7 +6,7 @@ using dansandu::canvas::bitmap::readBitmapFile;
 using dansandu::canvas::bitmap::writeBitmapFile;
 using dansandu::canvas::compression::compress;
 
-TEST_CASE("Compression")
+TEST_CASE("compression")
 {
     const auto original = readBitmapFile("resources/dansandu/canvas/flower.bmp");
     const auto palette = 10;

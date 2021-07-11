@@ -90,6 +90,11 @@ public:
         return height_;
     }
 
+    bool empty() const noexcept
+    {
+        return width_ == 0 | height_ == 0;
+    }
+
     const uint8_t* bytes() const noexcept
     {
         return static_cast<const uint8_t*>(static_cast<const void*>(pixels_.data()));
@@ -133,7 +138,7 @@ private:
             THROW(std::out_of_range, "cannot index the (", x, ", ", y, ") pixel in an ", width_, "x", height_,
                   " image -- indices are out of bounds");
         }
-        return x + (height_ - y - 1) * width_;
+        return x + y * width_;
     }
 
     size_type width_;

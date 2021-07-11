@@ -13,7 +13,7 @@ using dansandu::math::clustering::kMeans;
 using dansandu::math::matrix::dynamic;
 using dansandu::math::matrix::Matrix;
 using dansandu::math::matrix::sliceRow;
-using dansandu::range::range::consume;
+using dansandu::range::range::forEach;
 using dansandu::range::range::map;
 using dansandu::range::range::toVector;
 using dansandu::range::range::operator|;
@@ -24,7 +24,7 @@ namespace dansandu::canvas::compression
 Image compress(const Image& image, const int palette, const int iterations)
 {
     auto samples = Matrix<float, dynamic, 3>{image.width() * image.height(), 3};
-    image | consume([i = 0, &samples](const auto color) mutable {
+    image | forEach([i = 0, &samples](const auto color) mutable {
         samples(i, 0) = color.red();
         samples(i, 1) = color.green();
         samples(i, 2) = color.blue();

@@ -7,7 +7,7 @@ using dansandu::canvas::color::Color;
 using dansandu::canvas::color::Colors;
 using dansandu::canvas::image::Image;
 
-TEST_CASE("Image")
+TEST_CASE("image")
 {
     SECTION("empty")
     {

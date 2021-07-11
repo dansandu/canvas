@@ -8,23 +8,23 @@ using dansandu::canvas::bitmap::writeBitmapFile;
 using dansandu::canvas::color::Colors;
 using dansandu::canvas::image::Image;
 
-TEST_CASE("Bitmap")
+TEST_CASE("bitmap")
 {
     SECTION("chessboard")
     {
         const auto numberOfSquares = 4;
         const auto squareSize = 10;
-        auto expectedChessboard = Image{squareSize * numberOfSquares, squareSize * numberOfSquares};
-        for (auto x = 0; x < expectedChessboard.width(); ++x)
+        auto actual = Image{squareSize * numberOfSquares, squareSize * numberOfSquares};
+        for (auto x = 0; x < actual.width(); ++x)
         {
-            for (auto y = 0; y < expectedChessboard.height(); ++y)
+            for (auto y = 0; y < actual.height(); ++y)
             {
-                expectedChessboard(x, y) = (x / squareSize + y / squareSize) % 2 ? Colors::white : Colors::turquoise;
+                actual(x, y) = (x / squareSize + y / squareSize) % 2 ? Colors::white : Colors::turquoise;
             }
         }
-        const auto actualChessboard = readBitmapFile("resources/dansandu/canvas/expected_chessboard.bmp");
+        const auto expected = readBitmapFile("resources/dansandu/canvas/expected_chessboard.bmp");
 
-        REQUIRE(actualChessboard == expectedChessboard);
+        REQUIRE(expected == actual);
     }
 
     SECTION("flower")

@@ -1,11 +1,13 @@
 #include "dansandu/canvas/bitmap.hpp"
 #include "dansandu/ballotin/exception.hpp"
+#include "dansandu/ballotin/file_system.hpp"
 #include "dansandu/canvas/color.hpp"
 #include "dansandu/canvas/image.hpp"
 
 #include <cstdint>
-#include <fstream>
 
+using dansandu::ballotin::file_system::readBinaryFile;
+using dansandu::ballotin::file_system::writeBinaryFile;
 using dansandu::canvas::color::Color;
 using dansandu::canvas::image::Image;
 
@@ -22,204 +24,179 @@ static constexpr auto verticalPixelsPerMeter = 2835;
 static constexpr auto pixelArrayByteOffset = 54;
 static constexpr auto rowRoundUpByteCount = 4;
 static constexpr auto colorPlanesCount = 1;
-static constexpr auto pixelByteCount = 3;
+static constexpr auto doubleWordByteCount = 4;
+static constexpr auto singleWordByteCount = 2;
+static constexpr auto maximumDimension = 1048576U;
 
-void writeBitmapFile(const std::string& path, const Image& image)
+static int getPixelArrayPaddingBitCount(const int width)
 {
     const auto rowRoundUpBitCount = rowRoundUpByteCount * bitsPerByte;
     const auto rowPaddingBitCount =
-        (rowRoundUpBitCount - image.width() * bitsPerPixel % rowRoundUpBitCount) % rowRoundUpBitCount;
-    const auto pixelArrayByteCount = image.height() * (image.width() * bitsPerPixel + rowPaddingBitCount) / bitsPerByte;
+        (rowRoundUpBitCount - width * bitsPerPixel % rowRoundUpBitCount) % rowRoundUpBitCount;
+    return rowPaddingBitCount;
+}
+
+static int getPixelArrayPaddingByteCount(const int width)
+{
+    return getPixelArrayPaddingBitCount(width) / bitsPerByte;
+}
+
+static int getPixelArrayByteCount(const int width, const int height)
+{
+    const auto rowPaddingBitCount = getPixelArrayPaddingBitCount(width);
+    const auto pixelArrayByteCount = height * (width * bitsPerPixel + rowPaddingBitCount) / bitsPerByte;
+    return pixelArrayByteCount;
+}
+
+void writeBitmapFile(const std::string& path, const Image& image)
+{
+    const auto pixelArrayByteCount = getPixelArrayByteCount(image.width(), image.height());
+    const auto padding = getPixelArrayPaddingByteCount(image.width());
 
     auto bytes = std::vector<uint8_t>(pixelArrayByteOffset + pixelArrayByteCount, 0);
+
+    const auto littleEndian = [&bytes](const int offset, const int byteCount, const uint32_t value) {
+        for (auto index = 0; index < byteCount; ++index)
+        {
+            bytes[offset + index] = (value >> (index * bitsPerByte)) & 0xFF;
+        }
+    };
+
     bytes[0] = firstMagicByte;
     bytes[1] = secondMagicByte;
 
-    const auto littleEndianDoubleWord = [&bytes](const int offset, const uint32_t value) {
-        bytes[offset] = value & 0xFF;
-        bytes[offset + 1] = (value >> 8) & 0xFF;
-        bytes[offset + 2] = (value >> 16) & 0xFF;
-        bytes[offset + 3] = (value >> 24) & 0xFF;
-    };
+    littleEndian(0x02, doubleWordByteCount, pixelArrayByteOffset + pixelArrayByteCount);
+    littleEndian(0x0A, doubleWordByteCount, pixelArrayByteOffset);
+    littleEndian(0x0E, doubleWordByteCount, dibHeaderByteCount);
+    littleEndian(0x12, doubleWordByteCount, image.width());
+    littleEndian(0x16, doubleWordByteCount, image.height());
+    littleEndian(0x1A, singleWordByteCount, colorPlanesCount);
+    littleEndian(0x1C, singleWordByteCount, bitsPerPixel);
+    littleEndian(0x22, doubleWordByteCount, pixelArrayByteCount);
+    littleEndian(0x26, doubleWordByteCount, horizontalPixelsPerMeter);
+    littleEndian(0x2A, doubleWordByteCount, verticalPixelsPerMeter);
 
-    const auto littleEndianSingleWord = [&bytes](const int offset, const uint32_t value) {
-        bytes[offset] = value & 0xFF;
-        bytes[offset + 1] = (value >> 8) & 0xFF;
-    };
-
-    littleEndianDoubleWord(2, pixelArrayByteOffset + pixelArrayByteCount);
-    littleEndianDoubleWord(10, pixelArrayByteOffset);
-    littleEndianDoubleWord(14, dibHeaderByteCount);
-    littleEndianDoubleWord(18, image.width());
-    littleEndianDoubleWord(22, image.height());
-
-    littleEndianSingleWord(26, colorPlanesCount);
-    littleEndianSingleWord(28, bitsPerPixel);
-
-    littleEndianDoubleWord(34, pixelArrayByteCount);
-    littleEndianDoubleWord(38, horizontalPixelsPerMeter);
-    littleEndianDoubleWord(42, verticalPixelsPerMeter);
-
-    auto index = 0;
-    for (auto height = 0; height < image.height(); height++)
+    auto index = pixelArrayByteOffset;
+    for (auto height = 0; height < image.height(); ++height)
     {
-        for (auto width = 0; width < image.width(); width++)
+        for (auto width = 0; width < image.width(); ++width)
         {
             const auto color = image(width, height);
-            bytes[pixelArrayByteOffset + index] = color.blue();
-            bytes[pixelArrayByteOffset + index + 1] = color.green();
-            bytes[pixelArrayByteOffset + index + 2] = color.red();
+            bytes[index] = color.blue();
+            bytes[index + 1] = color.green();
+            bytes[index + 2] = color.red();
             index += 3;
         }
-        index += (rowRoundUpByteCount - index % rowRoundUpByteCount) % rowRoundUpByteCount;
+        index += padding;
     }
 
-    auto file = std::ofstream{path, std::ios_base::binary};
-    file << std::noskipws;
-    for (auto byte : bytes)
-    {
-        if (!(file << byte))
-        {
-            THROW(std::runtime_error, "could not write bitmap bytes to file");
-        }
-    }
-    file.close();
+    writeBinaryFile(path, bytes);
 }
 
 Image readBitmapFile(const std::string& path)
 {
-    auto file = std::ifstream{path, std::ios_base::binary};
-    if (!(file >> std::noskipws))
-    {
-        THROW(BitmapReadException, "could not read bitmap file '", path, "'");
-    }
+    const auto binary = readBinaryFile(path);
+    const auto binarySize = static_cast<int>(binary.size());
 
-    const auto littleEndianSingleWord = [&file](const int offset, const char* const errorMessage) {
-        constexpr auto count = 2;
+    auto value = uint32_t{0};
 
-        uint8_t buffer[count];
-        file.seekg(offset);
-        if (!static_cast<bool>(file.read(reinterpret_cast<char*>(buffer), count)))
+    const auto littleEndian = [&binary, &value](const int offset, const int byteCount) {
+        value = 0;
+        for (auto index = 0; index < byteCount; ++index)
         {
-            THROW(BitmapReadException, errorMessage);
+            value <<= bitsPerByte;
+            value |= binary[offset + byteCount - index - 1];
         }
-
-        auto value = static_cast<uint32_t>(buffer[1]);
-        (value <<= 8) |= buffer[0];
-        return value;
     };
 
-    const auto littleEndianDoubleWord = [&file](const int offset, const char* const errorMessage) {
-        constexpr auto count = 4;
-
-        uint8_t buffer[count];
-        file.seekg(offset);
-        if (!static_cast<bool>(file.read(reinterpret_cast<char*>(buffer), count)))
-        {
-            THROW(BitmapReadException, errorMessage);
-        }
-
-        auto value = static_cast<uint32_t>(buffer[3]);
-        (value <<= 8) |= buffer[2];
-        (value <<= 8) |= buffer[1];
-        (value <<= 8) |= buffer[0];
-        return value;
-    };
-
-    uint8_t magicWord[2] = {0x00, 0x00};
-    file >> magicWord[0] >> magicWord[1];
-    if (!file || magicWord[0] != firstMagicByte || magicWord[1] != secondMagicByte)
+    if (binarySize < dibHeaderByteCount)
     {
-        THROW(BitmapReadException, "invalid magic words in header -- ", firstMagicByte, " ", secondMagicByte,
-              " were expected instead of ", static_cast<int>(magicWord[0]), " ", static_cast<int>(magicWord[1]));
+        THROW(BitmapReadException, "bitmap is missing bytes from the DIB header");
     }
 
-    const auto readPixelArrayByteOffset =
-        littleEndianDoubleWord(10, "could not read pixel array byte offset from bitmap header");
-    if (readPixelArrayByteOffset != pixelArrayByteOffset)
+    if (binary[0] != firstMagicByte || binary[1] != secondMagicByte)
     {
-        THROW(BitmapReadException, "unsupported bitmap pixel array offset of ", readPixelArrayByteOffset, " -- only ",
+        THROW(BitmapReadException, "read magic words ", static_cast<int>(binary[0]), " and ",
+              static_cast<int>(binary[1]), " do not match actual magic words ", firstMagicByte, " and ",
+              secondMagicByte);
+    }
+
+    littleEndian(0x02, doubleWordByteCount);
+    if (value != static_cast<uint32_t>(binarySize))
+    {
+        THROW(BitmapReadException, "read bitmap file size ", value, " does not match actual size ", binarySize);
+    }
+
+    littleEndian(0x0A, doubleWordByteCount);
+    if (value != pixelArrayByteOffset)
+    {
+        THROW(BitmapReadException, "read pixel array byte offset ", value, " is not supported -- only ",
               pixelArrayByteOffset, " is supported");
     }
 
-    const auto readDibHeaderByteCount =
-        littleEndianDoubleWord(14, "could not read DIB header byte count from bitmap header");
-    if (readDibHeaderByteCount != dibHeaderByteCount)
+    littleEndian(0x0E, doubleWordByteCount);
+    if (value != dibHeaderByteCount)
     {
-        THROW(BitmapReadException, "unsupported bitmap DIB header size of ", readDibHeaderByteCount, " -- only ",
+        THROW(BitmapReadException, "read bitmap DIB header size ", value, " is not supported -- only ",
               dibHeaderByteCount, " is supported");
     }
 
-    const auto maximumDimension = 1048576U;
-
-    const auto readWidth = littleEndianDoubleWord(18, "could not read width from bitmap header");
-    if (readWidth > maximumDimension)
+    littleEndian(0x12, doubleWordByteCount);
+    if (value > maximumDimension)
     {
-        THROW(BitmapReadException, "the width ", readWidth, " is larger than the maximum of ", maximumDimension);
+        THROW(BitmapReadException, "read bitmap width ", value, " is larger than the maximum of ", maximumDimension);
     }
+    const auto width = static_cast<int>(value);
 
-    const auto readHeight = littleEndianDoubleWord(22, "could not read height from bitmap header");
-    if (readHeight > maximumDimension)
+    littleEndian(0x16, doubleWordByteCount);
+    if (value > maximumDimension)
     {
-        THROW(BitmapReadException, "the height ", readHeight, " is larger than the maximum of ", maximumDimension);
+        THROW(BitmapReadException, "read bitmap height ", value, " is larger than the maximum of ", maximumDimension);
     }
+    const auto height = static_cast<int>(value);
 
-    const auto readColorPlanesCount =
-        littleEndianSingleWord(26, "could not read color planes count from bitmap header");
-    if (readColorPlanesCount != colorPlanesCount)
+    littleEndian(0x1A, singleWordByteCount);
+    if (value != colorPlanesCount)
     {
-        THROW(BitmapReadException, "unsupported bitmap color planes of ", readColorPlanesCount, " -- only ",
-              colorPlanesCount, " is supported");
-    }
-
-    const auto readBitsPerPixel = littleEndianSingleWord(28, "could not read bits per pixel from bitmap header");
-    if (readBitsPerPixel != bitsPerPixel)
-    {
-        THROW(BitmapReadException, "unsupported bitmap bits per pixel of ", readBitsPerPixel, " -- only ", bitsPerPixel,
+        THROW(BitmapReadException, "read bitmap color planes ", value, " is not supported -- only ", colorPlanesCount,
               " is supported");
     }
 
-    const auto readPixelArrayByteCount =
-        littleEndianDoubleWord(34, "could not read pixel array byte count from bitmap header");
+    littleEndian(0x1C, singleWordByteCount);
+    if (value != bitsPerPixel)
+    {
+        THROW(BitmapReadException, "read bitmap bits per pixel ", value, " is not supported -- only ", bitsPerPixel,
+              " is supported");
+    }
 
-    const auto width = static_cast<int>(readWidth);
-    const auto height = static_cast<int>(readHeight);
+    littleEndian(0x22, doubleWordByteCount);
+    const auto pixelArrayByteCount = getPixelArrayByteCount(width, height);
+    if (value != static_cast<uint32_t>(pixelArrayByteCount))
+    {
+        THROW(BitmapReadException, "read bitmap pixel array size (with padding) ", value,
+              " does not match expected size ", pixelArrayByteCount);
+    }
 
+    if (binarySize != pixelArrayByteOffset + pixelArrayByteCount)
+    {
+        THROW(BitmapReadException, "bitmap file size ", binarySize, " does not match expected size ",
+              pixelArrayByteOffset + pixelArrayByteCount);
+    }
+
+    const auto padding = getPixelArrayPaddingByteCount(width);
+
+    auto index = pixelArrayByteOffset;
     auto image = Image{width, height};
-    auto pixelArrayByteCount = 0;
-
-    uint8_t buffer[pixelByteCount + rowRoundUpByteCount];
-
-    file.seekg(pixelArrayByteOffset);
     for (auto i = 0; i < height; i++)
     {
         for (auto j = 0; j < width; j++)
         {
-            if (!static_cast<bool>(file.read(reinterpret_cast<char*>(buffer), pixelByteCount)))
-            {
-                THROW(BitmapReadException, "could not read pixel data from pixel array at position (", j, ", ", i, ")");
-            }
-
-            auto code = static_cast<uint32_t>(buffer[2]);
-            (code <<= 8) |= buffer[1];
-            (code <<= 8) |= buffer[0];
-            (code <<= 8) |= 0xFF;
-            image(j, i) = Color{code};
-
-            pixelArrayByteCount += 3;
+            littleEndian(index, 3);
+            (value <<= 8) |= 0xFF;
+            image(j, i) = Color{value};
+            index += 3;
         }
-        const auto padding = (rowRoundUpByteCount - pixelArrayByteCount % rowRoundUpByteCount) % rowRoundUpByteCount;
-        if (!static_cast<bool>(file.read(reinterpret_cast<char*>(buffer), padding)))
-        {
-            THROW(BitmapReadException, "could not read padding bytes from pixel array at row ", i);
-        }
-        pixelArrayByteCount += padding;
-    }
-
-    if (readPixelArrayByteCount != static_cast<uint32_t>(pixelArrayByteCount))
-    {
-        THROW(BitmapReadException, "mismatch between read pixel array size ", readPixelArrayByteCount,
-              " and actual size ", pixelArrayByteCount);
+        index += padding;
     }
 
     return image;

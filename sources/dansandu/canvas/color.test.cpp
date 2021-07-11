@@ -4,7 +4,7 @@
 using dansandu::canvas::color::Color;
 using dansandu::canvas::color::Colors;
 
-TEST_CASE("Color")
+TEST_CASE("color")
 {
     SECTION("code channels")
     {
