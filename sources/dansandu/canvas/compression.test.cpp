@@ -8,7 +8,7 @@ using dansandu::canvas::compression::compress;
 
 TEST_CASE("compression")
 {
-    const auto original = readBitmapFile("resources/dansandu/canvas/flower.bmp");
+    const auto original = readBitmapFile("resources/dansandu/canvas/expected_flower.bmp");
     const auto palette = 10;
     const auto iterations = 20;
     const auto compressed = compress(original, palette, iterations);

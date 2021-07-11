@@ -29,11 +29,11 @@ TEST_CASE("bitmap")
 
     SECTION("flower")
     {
-        const auto original = readBitmapFile("resources/dansandu/canvas/flower.bmp");
+        const auto original = readBitmapFile("resources/dansandu/canvas/expected_flower.bmp");
 
-        writeBitmapFile("resources/dansandu/canvas/flower_copy.bmp", original);
+        writeBitmapFile("resources/dansandu/canvas/actual_flower.bmp", original);
 
-        const auto copy = readBitmapFile("resources/dansandu/canvas/flower_copy.bmp");
+        const auto copy = readBitmapFile("resources/dansandu/canvas/actual_flower.bmp");
 
         REQUIRE(original == copy);
     }
