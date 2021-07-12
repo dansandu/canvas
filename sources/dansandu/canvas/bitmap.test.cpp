@@ -15,13 +15,14 @@ TEST_CASE("bitmap")
         const auto numberOfSquares = 4;
         const auto squareSize = 10;
         auto actual = Image{squareSize * numberOfSquares, squareSize * numberOfSquares};
-        for (auto x = 0; x < actual.width(); ++x)
+        for (auto y = 0; y < actual.height(); ++y)
         {
-            for (auto y = 0; y < actual.height(); ++y)
+            for (auto x = 0; x < actual.width(); ++x)
             {
                 actual(x, y) = (x / squareSize + y / squareSize) % 2 ? Colors::white : Colors::turquoise;
             }
         }
+
         const auto expected = readBitmapFile("resources/dansandu/canvas/expected_chessboard.bmp");
 
         REQUIRE(expected == actual);
@@ -29,12 +30,12 @@ TEST_CASE("bitmap")
 
     SECTION("flower")
     {
-        const auto original = readBitmapFile("resources/dansandu/canvas/expected_flower.bmp");
+        const auto expected = readBitmapFile("resources/dansandu/canvas/expected_flower.bmp");
 
-        writeBitmapFile("resources/dansandu/canvas/actual_flower.bmp", original);
+        writeBitmapFile("resources/dansandu/canvas/actual_flower.bmp", expected);
 
-        const auto copy = readBitmapFile("resources/dansandu/canvas/actual_flower.bmp");
+        const auto actual = readBitmapFile("resources/dansandu/canvas/actual_flower.bmp");
 
-        REQUIRE(original == copy);
+        REQUIRE(expected == actual);
     }
 }

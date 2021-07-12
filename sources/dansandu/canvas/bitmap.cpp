@@ -75,11 +75,11 @@ void writeBitmapFile(const std::string& path, const Image& image)
     write(0x2A, 4, verticalPixelsPerMeter);
 
     auto index = pixelArrayByteOffset;
-    for (auto height = 0; height < image.height(); ++height)
+    for (auto h = 0; h < image.height(); ++h)
     {
-        for (auto width = 0; width < image.width(); ++width)
+        for (auto w = 0; w < image.width(); ++w)
         {
-            const auto color = image(width, height);
+            const auto color = image(w, image.height() - h - 1);
             bytes[index] = color.blue();
             bytes[index + 1] = color.green();
             bytes[index + 2] = color.red();
@@ -182,17 +182,21 @@ Image readBitmapFile(const std::string& path)
 
     const auto padding = getPixelArrayPaddingByteCount(width);
 
-    auto colors = std::vector<Color>{};
-    colors.reserve(width * height);
-    for (auto index = pixelArrayByteOffset; index < binarySize; index += 3)
+    auto index = pixelArrayByteOffset;
+    auto image = Image{width, height};
+    for (auto h = 0; h < height; ++h)
     {
-        read(index, 3, value);
-        (value <<= 8) |= 0xFF;
-        colors.emplace_back(value);
-        index += !(colors.size() % width) * padding;
+        for (auto w = 0; w < width; ++w)
+        {
+            read(index, 3, value);
+            (value <<= 8) |= 0xFF;
+            image(w, height - h - 1) = Color{value};
+            index += 3;
+        }
+        index += padding;
     }
 
-    return Image{width, height, std::move(colors)};
+    return image;
 }
 
 }

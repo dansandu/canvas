@@ -94,6 +94,11 @@ public:
         return height_;
     }
 
+    size_type size() const noexcept
+    {
+        return width_ * height_;
+    }
+
     bool empty() const noexcept
     {
         return width_ == 0 | height_ == 0;

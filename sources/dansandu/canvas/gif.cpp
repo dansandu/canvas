@@ -28,8 +28,8 @@ namespace dansandu::canvas::gif
 
 static constexpr auto extensionIntroducer = 0x21;
 static constexpr auto minimumColorsPerTable = 4;
-static constexpr auto maximumColorsPerTable = 0xFF;
-static constexpr auto maximumDataSubBlockSize = 0xFF;
+static constexpr auto maximumColorsPerTable = 256;
+static constexpr auto maximumDataSubBlockSize = 255;
 static constexpr auto blockTerminator = 0x00;
 static constexpr auto trailer = 0x3B;
 
@@ -287,16 +287,16 @@ static void writeImageData(std::vector<uint8_t>& bytes, const std::vector<int>& 
     auto blockStart = 0;
     while (blockStart < lzwOutputSize)
     {
-        const auto blockEnd = std::min(maximumDataSubBlockSize, lzwOutputSize - blockStart);
+        const auto count = std::min(maximumDataSubBlockSize, lzwOutputSize - blockStart);
 
-        bytes.push_back(blockEnd - blockStart);
+        bytes.push_back(count);
 
-        for (auto index = blockStart; index < blockEnd; ++index)
+        for (auto index = 0; index < count; ++index)
         {
-            bytes.push_back(lzwOutput[index]);
+            bytes.push_back(lzwOutput[blockStart + index]);
         }
 
-        blockStart += blockEnd;
+        blockStart += count;
     }
 
     bytes.push_back(blockTerminator);
@@ -318,8 +318,8 @@ static std::pair<std::vector<Color>, std::vector<int>> getImageColors(const Imag
 
     if (static_cast<int>(colors.size()) > maximumColorsPerTable)
     {
-        auto samples = Matrix<float>{static_cast<int>(colors.size()), 3};
-        colors | forEach([i = 0, &samples](const auto color) mutable {
+        auto samples = Matrix<float>{image.size(), 3};
+        image | forEach([i = 0, &samples](const auto color) mutable {
             samples(i, 0) = color.red();
             samples(i, 1) = color.green();
             samples(i, 2) = color.blue();
@@ -329,15 +329,13 @@ static std::pair<std::vector<Color>, std::vector<int>> getImageColors(const Imag
         const auto iterations = 10;
         const auto centroidsAndLabels = kMeans(samples, maximumColorsPerTable, iterations);
         const auto centroids = std::move(centroidsAndLabels.first);
-        const auto labels = std::move(centroidsAndLabels.second);
         const auto cap = [](const auto c) { return static_cast<Color::value_type>((c < 255.0f) ? c : 255.0f); };
 
-        colors = labels | map([&centroids, &cap](const auto label) {
-                     return Color{cap(centroids(label, 0)), cap(centroids(label, 1)), cap(centroids(label, 2))};
+        colors = integers(0, 1, centroids.rowCount()) | map([&centroids, &cap](const auto s) {
+                     return Color{cap(centroids(s, 0)), cap(centroids(s, 1)), cap(centroids(s, 2))};
                  }) |
                  toVector();
-
-        indexes = indexes | map([&labels](auto index) { return labels[index]; }) | toVector();
+        indexes = std::move(centroidsAndLabels.second);
     }
 
     while (colors.size() < minimumColorsPerTable)
