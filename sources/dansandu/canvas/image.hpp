@@ -31,25 +31,29 @@ public:
     {
     }
 
-    Image(const size_type width, const size_type height, std::vector<Color> pixels)
-        : width_{width}, height_{height}, pixels_{std::move(pixels)}
+    Image(const size_type width, const size_type height, std::vector<Color> colors)
+        : width_{width}, height_{height}, colors_{std::move(colors)}
     {
         if (width_ < 0 || height_ < 0)
         {
-            THROW(std::invalid_argument, "invalid dimensions ", width_, "x", height_,
-                  " provided in image constructor -- width and height must be greater than or equal to zero");
+            THROW(std::invalid_argument, "width x height dimensions ", width_, "x", height_,
+                  " must be greater than or equal to zero");
+        }
+
+        if (width_ * height_ != static_cast<int>(colors_.size()))
+        {
+            THROW(std::invalid_argument, "colors size ", colors_.size(), " must match image area ", width_ * height_);
         }
 
         if (width_ == 0 || height_ == 0)
         {
             width_ = height_ = 0;
-            pixels_.clear();
         }
     }
 
     Image(const Image&) = default;
 
-    Image(Image&& other) noexcept : width_{other.width_}, height_{other.height_}, pixels_{std::move(other.pixels_)}
+    Image(Image&& other) noexcept : width_{other.width_}, height_{other.height_}, colors_{std::move(other.colors_)}
     {
         other.width_ = other.height_ = 0;
     }
@@ -60,24 +64,24 @@ public:
     {
         width_ = other.width_;
         height_ = other.height_;
-        pixels_ = std::move(other.pixels_);
+        colors_ = std::move(other.colors_);
         other.width_ = other.height_ = 0;
         return *this;
     }
 
     Color& operator()(const size_type x, const size_type y)
     {
-        return pixels_[index(x, y)];
+        return colors_[index(x, y)];
     }
 
     Color operator()(const size_type x, const size_type y) const
     {
-        return pixels_[index(x, y)];
+        return colors_[index(x, y)];
     }
 
     void clear(const Color color = Colors::black)
     {
-        std::fill(pixels_.begin(), pixels_.end(), color);
+        std::fill(colors_.begin(), colors_.end(), color);
     }
 
     size_type width() const noexcept
@@ -97,37 +101,37 @@ public:
 
     const uint8_t* bytes() const noexcept
     {
-        return static_cast<const uint8_t*>(static_cast<const void*>(pixels_.data()));
+        return static_cast<const uint8_t*>(static_cast<const void*>(colors_.data()));
     }
 
     auto begin()
     {
-        return pixels_.begin();
+        return colors_.begin();
     }
 
     auto end()
     {
-        return pixels_.end();
+        return colors_.end();
     }
 
     auto begin() const
     {
-        return pixels_.begin();
+        return colors_.begin();
     }
 
     auto end() const
     {
-        return pixels_.end();
+        return colors_.end();
     }
 
     auto cbegin() const
     {
-        return pixels_.cbegin();
+        return colors_.cbegin();
     }
 
     auto cend() const
     {
-        return pixels_.cend();
+        return colors_.cend();
     }
 
 private:
@@ -143,7 +147,7 @@ private:
 
     size_type width_;
     size_type height_;
-    std::vector<Color> pixels_;
+    std::vector<Color> colors_;
 };
 
 inline bool operator==(const Image& lhs, const Image& rhs)
