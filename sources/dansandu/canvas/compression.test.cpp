@@ -3,14 +3,15 @@
 #include "dansandu/canvas/compression.hpp"
 
 using dansandu::canvas::bitmap::readBitmapFile;
-using dansandu::canvas::bitmap::writeBitmapFile;
-using dansandu::canvas::compression::compress;
+using dansandu::canvas::compression::testCompress;
 
 TEST_CASE("compression")
 {
     const auto original = readBitmapFile("resources/dansandu/canvas/expected_flower.bmp");
+    const auto expected = readBitmapFile("resources/dansandu/canvas/expected_compressed.bmp");
     const auto palette = 10;
     const auto iterations = 20;
-    const auto compressed = compress(original, palette, iterations);
-    writeBitmapFile("resources/dansandu/canvas/expected_compressed_flower.bmp", compressed);
+    const auto actual = testCompress(original, palette, iterations);
+
+    REQUIRE(expected == actual);
 }

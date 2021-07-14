@@ -12,6 +12,7 @@ using dansandu::canvas::color::Color;
 using dansandu::canvas::color::Colors;
 using dansandu::canvas::image::Image;
 using dansandu::math::clustering::kMeans;
+using dansandu::math::clustering::testKmeans;
 using dansandu::math::matrix::dynamic;
 using dansandu::math::matrix::Matrix;
 using dansandu::range::range::operator|;
@@ -302,7 +303,8 @@ static void writeImageData(std::vector<uint8_t>& bytes, const std::vector<int>& 
     bytes.push_back(blockTerminator);
 }
 
-static std::pair<std::vector<Color>, std::vector<int>> getImageColors(const Image& image)
+template<typename Cluster>
+std::pair<std::vector<Color>, std::vector<int>> getImageColors(const Image& image, Cluster&& cluster)
 {
     auto colors = std::vector<Color>{};
     auto indexes = std::vector<int>{};
@@ -327,7 +329,7 @@ static std::pair<std::vector<Color>, std::vector<int>> getImageColors(const Imag
         });
 
         const auto iterations = 10;
-        const auto centroidsAndLabels = kMeans(samples, maximumColorsPerTable, iterations);
+        const auto centroidsAndLabels = cluster(samples, maximumColorsPerTable, iterations);
         const auto centroids = std::move(centroidsAndLabels.first);
         const auto cap = [](const auto c) { return static_cast<Color::value_type>((c < 255.0f) ? c : 255.0f); };
 
@@ -346,7 +348,8 @@ static std::pair<std::vector<Color>, std::vector<int>> getImageColors(const Imag
     return {std::move(colors), std::move(indexes)};
 }
 
-std::vector<uint8_t> getGifBinary(const Image& image)
+template<typename Cluster>
+std::vector<uint8_t> getGifBinary(const Image& image, Cluster&& cluster)
 {
     if (image.empty())
     {
@@ -357,7 +360,7 @@ std::vector<uint8_t> getGifBinary(const Image& image)
 
     writeHeader(bytes);
 
-    const auto [colors, indexes] = getImageColors(image);
+    const auto [colors, indexes] = getImageColors(image, std::forward<Cluster>(cluster));
     const auto globalColorsCount = static_cast<int>(colors.size());
     const auto delay = 0;
 
@@ -375,7 +378,9 @@ std::vector<uint8_t> getGifBinary(const Image& image)
     return bytes;
 }
 
-std::vector<uint8_t> getGifBinary(const std::vector<const Image*>& frames, const int periodCentiseconds)
+template<typename Cluster>
+std::vector<uint8_t> getGifBinary(const std::vector<const Image*>& frames, const int periodCentiseconds,
+                                  Cluster&& cluster)
 {
     if (frames.empty())
     {
@@ -412,7 +417,7 @@ std::vector<uint8_t> getGifBinary(const std::vector<const Image*>& frames, const
 
         writeGraphicControlExtension(bytes, periodCentiseconds);
 
-        const auto [colors, indexes] = getImageColors(*frame);
+        const auto [colors, indexes] = getImageColors(*frame, std::forward<Cluster>(cluster));
         const auto localColorsCount = static_cast<int>(colors.size());
 
         writeImageDescriptor(bytes, width, height, localColorsCount);
@@ -423,6 +428,26 @@ std::vector<uint8_t> getGifBinary(const std::vector<const Image*>& frames, const
     bytes.push_back(trailer);
 
     return bytes;
+}
+
+std::vector<uint8_t> getGifBinary(const Image& image)
+{
+    return getGifBinary(image, kMeans);
+}
+
+std::vector<uint8_t> getGifBinary(const std::vector<const Image*>& frames, const int periodCentiseconds)
+{
+    return getGifBinary(frames, periodCentiseconds, kMeans);
+}
+
+std::vector<uint8_t> testGetGifBinary(const Image& image)
+{
+    return getGifBinary(image, testKmeans);
+}
+
+std::vector<uint8_t> testGetGifBinary(const std::vector<const Image*>& frames, const int periodCentiseconds)
+{
+    return getGifBinary(frames, periodCentiseconds, testKmeans);
 }
 
 void writeGifFile(const std::string& path, const dansandu::canvas::image::Image& image)

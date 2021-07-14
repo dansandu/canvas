@@ -10,6 +10,7 @@
 using dansandu::canvas::color::Color;
 using dansandu::canvas::image::Image;
 using dansandu::math::clustering::kMeans;
+using dansandu::math::clustering::testKmeans;
 using dansandu::math::matrix::dynamic;
 using dansandu::math::matrix::Matrix;
 using dansandu::math::matrix::sliceRow;
@@ -21,7 +22,8 @@ using dansandu::range::range::operator|;
 namespace dansandu::canvas::compression
 {
 
-Image compress(const Image& image, const int palette, const int iterations)
+template<typename Cluster>
+Image compress(const Image& image, const int palette, const int iterations, Cluster&& cluster)
 {
     auto samples = Matrix<float, dynamic, 3>{image.width() * image.height(), 3};
     image | forEach([i = 0, &samples](const auto color) mutable {
@@ -30,7 +32,7 @@ Image compress(const Image& image, const int palette, const int iterations)
         samples(i, 2) = color.blue();
         ++i;
     });
-    const auto centroidsAndLabels = kMeans(samples, palette, iterations);
+    const auto centroidsAndLabels = cluster(samples, palette, iterations);
     auto pixels = centroidsAndLabels.second | map([&centroidsAndLabels](const auto label) {
                       return Color{static_cast<Color::value_type>(centroidsAndLabels.first(label, 0)),
                                    static_cast<Color::value_type>(centroidsAndLabels.first(label, 1)),
@@ -38,6 +40,17 @@ Image compress(const Image& image, const int palette, const int iterations)
                   }) |
                   toVector();
     return Image{image.width(), image.height(), std::move(pixels)};
+}
+
+Image compress(const Image& image, const int palette, const int iterations)
+{
+    return compress(image, palette, iterations, kMeans);
+}
+
+dansandu::canvas::image::Image testCompress(const dansandu::canvas::image::Image& image, const int palette,
+                                            const int iterations)
+{
+    return compress(image, palette, iterations, testKmeans);
 }
 
 }

@@ -10,13 +10,11 @@
 #include <vector>
 
 using dansandu::ballotin::file_system::readBinaryFile;
-using dansandu::ballotin::file_system::writeBinaryFile;
 using dansandu::canvas::bitmap::readBitmapFile;
 using dansandu::canvas::color::Color;
 using dansandu::canvas::color::Colors;
-using dansandu::canvas::gif::getGifBinary;
 using dansandu::canvas::gif::lzw;
-using dansandu::canvas::gif::writeGifFile;
+using dansandu::canvas::gif::testGetGifBinary;
 using dansandu::canvas::image::Image;
 using dansandu::range::range::operator|;
 using dansandu::range::range::forEach;
@@ -101,7 +99,7 @@ TEST_CASE("gif")
 
     const auto toInt = [](auto value) { return static_cast<int>(value); };
 
-    SECTION("image")
+    SECTION("small image")
     {
         // clang-format off
         const auto image = Image{3, 5, {
@@ -118,25 +116,13 @@ TEST_CASE("gif")
              0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0xFF, 0x21, 0xF9, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x2C, 0x00, 0x00,
              0x00, 0x00, 0x03, 0x00, 0x05, 0x00, 0x00, 0x02, 0x05, 0x44, 0x2E, 0x17, 0xA3, 0x5A, 0x00, 0x3B}};
 
-        SECTION("from memory")
-        {
-            const auto binary = getGifBinary(image);
-            const auto actual = binary | map(toInt) | toVector();
+        const auto binary = testGetGifBinary(image);
+        const auto actual = binary | map(toInt) | toVector();
 
-            REQUIRE(expected == actual);
-        }
-
-        SECTION("from disk")
-        {
-            writeGifFile("resources/dansandu/canvas/actual_image.gif", image);
-            const auto binary = readBinaryFile("resources/dansandu/canvas/actual_image.gif");
-            const auto actual = binary | map(toInt) | toVector();
-
-            REQUIRE(expected == actual);
-        }
+        REQUIRE(expected == actual);
     }
 
-    SECTION("animation")
+    SECTION("small animation")
     {
         const auto images = std::vector<Color>{{Colors::red, Colors::green, Colors::blue}} | map([](const auto color) {
                                 return Image{5, 5, color};
@@ -156,21 +142,18 @@ TEST_CASE("gif")
              0x00, 0x00, 0x2C, 0x00, 0x00, 0x00, 0x00, 0x05, 0x00, 0x05, 0x00, 0x81, 0x00, 0x00, 0xFF, 0x00,
              0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x04, 0x84, 0x8F, 0xA9, 0x58, 0x00, 0x3B}};
 
-        SECTION("from memory")
-        {
-            const auto binary = getGifBinary(frames, periodCentiseconds);
-            const auto actual = binary | map(toInt) | toVector();
+        const auto binary = testGetGifBinary(frames, periodCentiseconds);
+        const auto actual = binary | map(toInt) | toVector();
 
-            REQUIRE(expected == actual);
-        }
+        REQUIRE(expected == actual);
+    }
 
-        SECTION("from disk")
-        {
-            writeGifFile("resources/dansandu/canvas/actual_animation.gif", frames, periodCentiseconds);
-            const auto binary = readBinaryFile("resources/dansandu/canvas/actual_animation.gif");
-            const auto actual = binary | map(toInt) | toVector();
+    SECTION("image")
+    {
+        const auto expected = readBinaryFile("resources/dansandu/canvas/expected_image.gif");
+        const auto image = readBitmapFile("resources/dansandu/canvas/expected_flower.bmp");
+        const auto actual = testGetGifBinary(image);
 
-            REQUIRE(expected == actual);
-        }
+        REQUIRE(expected == actual);
     }
 }
