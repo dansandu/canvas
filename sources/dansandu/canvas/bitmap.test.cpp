@@ -32,9 +32,9 @@ TEST_CASE("bitmap")
     {
         const auto expected = readBitmapFile("resources/dansandu/canvas/expected_flower.bmp");
 
-        writeBitmapFile("resources/dansandu/canvas/actual_flower.bmp", expected);
+        writeBitmapFile("target/actual_flower.bmp", expected);
 
-        const auto actual = readBitmapFile("resources/dansandu/canvas/actual_flower.bmp");
+        const auto actual = readBitmapFile("target/actual_flower.bmp");
 
         REQUIRE(expected == actual);
     }

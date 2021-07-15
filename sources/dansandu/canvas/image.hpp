@@ -2,6 +2,7 @@
 
 #include "dansandu/ballotin/exception.hpp"
 #include "dansandu/canvas/color.hpp"
+#include "dansandu/math/matrix.hpp"
 
 #include <algorithm>
 #include <vector>
@@ -77,6 +78,16 @@ public:
     Color operator()(const size_type x, const size_type y) const
     {
         return colors_[index(x, y)];
+    }
+
+    Color& operator()(dansandu::math::matrix::ConstantMatrixView<size_type, 1, 2> point)
+    {
+        return colors_[index(point.x(), point.y())];
+    }
+
+    Color operator()(dansandu::math::matrix::ConstantMatrixView<size_type, 1, 2> point) const
+    {
+        return colors_[index(point.x(), point.y())];
     }
 
     void clear(const Color color = Colors::black)
