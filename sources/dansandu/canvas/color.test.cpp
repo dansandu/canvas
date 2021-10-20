@@ -1,5 +1,5 @@
-#include "catchorg/catch/catch.hpp"
 #include "dansandu/canvas/color.hpp"
+#include "catchorg/catch/catch.hpp"
 
 using dansandu::canvas::color::Color;
 using dansandu::canvas::color::Colors;

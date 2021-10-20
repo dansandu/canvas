@@ -53,7 +53,8 @@ void writeBitmapFile(const std::string& path, const Image& image)
 
     auto bytes = std::vector<uint8_t>(pixelArrayByteOffset + pixelArrayByteCount, 0);
 
-    const auto write = [&bytes](const int offset, const int byteCount, const uint32_t value) {
+    const auto write = [&bytes](const int offset, const int byteCount, const uint32_t value)
+    {
         for (auto index = 0; index < byteCount; ++index)
         {
             bytes[offset + index] = (value >> (index * bitsPerByte)) & 0xFF;
@@ -96,7 +97,8 @@ Image readBitmapFile(const std::string& path)
     const auto binary = readBinaryFile(path);
     const auto binarySize = static_cast<int>(binary.size());
 
-    const auto read = [&binary](const int offset, const int byteCount, uint32_t& value) {
+    const auto read = [&binary](const int offset, const int byteCount, uint32_t& value)
+    {
         value = 0;
         for (auto index = 0; index < byteCount; ++index)
         {

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <utility>
 
 namespace dansandu::canvas::color
 {
@@ -352,6 +353,8 @@ constexpr bool operator!=(const Color lhs, const Color rhs)
 {
     return !(lhs == rhs);
 }
+
+PRALINE_EXPORT std::ostream& operator<<(std::ostream& stream, const Color color);
 
 }
 

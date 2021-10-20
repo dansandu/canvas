@@ -1,5 +1,5 @@
-#include "catchorg/catch/catch.hpp"
 #include "dansandu/canvas/image.hpp"
+#include "catchorg/catch/catch.hpp"
 
 #include <cstdint>
 

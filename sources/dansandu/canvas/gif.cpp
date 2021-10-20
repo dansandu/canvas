@@ -2,27 +2,20 @@
 #include "dansandu/ballotin/binary.hpp"
 #include "dansandu/ballotin/exception.hpp"
 #include "dansandu/ballotin/file_system.hpp"
-#include "dansandu/math/clustering.hpp"
+#include "dansandu/ballotin/logging.hpp"
+#include "dansandu/canvas/color.hpp"
 #include "dansandu/range/range.hpp"
 
 #include <algorithm>
 #include <vector>
 
+using dansandu::ballotin::binary::pushBits;
+using dansandu::ballotin::file_system::writeBinaryFile;
 using dansandu::canvas::color::Color;
 using dansandu::canvas::color::Colors;
 using dansandu::canvas::image::Image;
-using dansandu::math::clustering::kMeans;
-using dansandu::math::clustering::testKmeans;
-using dansandu::math::matrix::dynamic;
-using dansandu::math::matrix::Matrix;
-using dansandu::range::range::operator|;
-using dansandu::ballotin::binary::pushBits;
-using dansandu::ballotin::file_system::writeBinaryFile;
-using dansandu::range::range::forEach;
-using dansandu::range::range::integers;
-using dansandu::range::range::map;
-using dansandu::range::range::take;
-using dansandu::range::range::toVector;
+
+using namespace dansandu::range::range;
 
 namespace dansandu::canvas::gif
 {
@@ -154,7 +147,7 @@ static void writeLogicalScreen(std::vector<uint8_t>& bytes, const unsigned width
     bytes.push_back(pixelAspectRatio);
 }
 
-static void writeApplicationExtension(std::vector<uint8_t>& bytes, const unsigned repetitions = 0U)
+static void writeAnimationApplicationExtension(std::vector<uint8_t>& bytes, const unsigned repetitions = 0U)
 {
     bytes.push_back(extensionIntroducer);
 
@@ -255,6 +248,8 @@ static void writeImageDescriptor(std::vector<uint8_t>& bytes, const unsigned wid
 
 static void writeColorTable(std::vector<uint8_t>& bytes, const std::vector<Color>& colors)
 {
+    LOG_DEBUG("writing color table with ", colors.size(), " colors");
+
     for (const auto color : colors)
     {
         bytes.push_back(color.red());
@@ -280,7 +275,13 @@ static void writeColorTable(std::vector<uint8_t>& bytes, const std::vector<Color
 
 static void writeImageData(std::vector<uint8_t>& bytes, const std::vector<int>& indexes, const int codeSize)
 {
-    const auto [lzwOutput, minimumCodeSize] = lzw(indexes, codeSize);
+    const auto output = lzw(indexes, codeSize);
+    const auto& lzwOutput = output.first;
+    const auto minimumCodeSize = output.second;
+
+    LOG_DEBUG("lzw coding with minimum code size ", minimumCodeSize, ", code size ", codeSize, " and output of ",
+              lzwOutput.size(), " bytes");
+
     const auto lzwOutputSize = static_cast<int>(lzwOutput.size());
 
     bytes.push_back(minimumCodeSize);
@@ -303,11 +304,11 @@ static void writeImageData(std::vector<uint8_t>& bytes, const std::vector<int>& 
     bytes.push_back(blockTerminator);
 }
 
-template<typename Cluster>
-std::pair<std::vector<Color>, std::vector<int>> getImageColors(const Image& image, Cluster&& cluster)
+static std::pair<std::vector<Color>, std::vector<int>> getImageColors(const Image& image)
 {
     auto colors = std::vector<Color>{};
     auto indexes = std::vector<int>{};
+
     for (const auto color : image)
     {
         const auto position = std::find(colors.cbegin(), colors.cend(), color);
@@ -320,24 +321,43 @@ std::pair<std::vector<Color>, std::vector<int>> getImageColors(const Image& imag
 
     if (static_cast<int>(colors.size()) > maximumColorsPerTable)
     {
-        auto samples = Matrix<float>{image.size(), 3};
-        image | forEach([i = 0, &samples](const auto color) mutable {
-            samples(i, 0) = color.red();
-            samples(i, 1) = color.green();
-            samples(i, 2) = color.blue();
-            ++i;
-        });
+        LOG_DEBUG("gif image color palette is of size ", colors.size(), " which exceeds maximum palette size of ",
+                  maximumColorsPerTable, " and requires compression");
 
-        const auto iterations = 10;
-        const auto centroidsAndLabels = cluster(samples, maximumColorsPerTable, iterations);
-        const auto centroids = std::move(centroidsAndLabels.first);
-        const auto cap = [](const auto c) { return static_cast<Color::value_type>((c < 255.0f) ? c : 255.0f); };
+        auto reducedColors = std::vector<Color>{};
+        auto reducedIndexes = std::vector<int>{};
 
-        colors = integers(0, 1, centroids.rowCount()) | map([&centroids, &cap](const auto s) {
-                     return Color{cap(centroids(s, 0)), cap(centroids(s, 1)), cap(centroids(s, 2))};
-                 }) |
-                 toVector();
-        indexes = std::move(centroidsAndLabels.second);
+        const auto redSamples = 4;
+        const auto greenSamples = 8;
+        const auto blueSamples = 8;
+
+        const auto channelDepth = 255.0f;
+
+        const auto redSampling = channelDepth / (redSamples - 1);
+        const auto greenSampling = channelDepth / (greenSamples - 1);
+        const auto blueSampling = channelDepth / (blueSamples - 1);
+
+        for (const auto index : indexes)
+        {
+            const auto color = colors[index];
+            const auto red = static_cast<Color::value_type>(std::round(color.red() / redSampling) * redSampling);
+            const auto green =
+                static_cast<Color::value_type>(std::round(color.green() / greenSampling) * greenSampling);
+            const auto blue = static_cast<Color::value_type>(std::round(color.blue() / blueSampling) * blueSampling);
+            const auto reducedColor = Color{red, green, blue};
+
+            const auto position = std::find(reducedColors.cbegin(), reducedColors.cend(), reducedColor);
+            reducedIndexes.push_back(position - reducedColors.cbegin());
+            if (position == reducedColors.cend())
+            {
+                reducedColors.push_back(reducedColor);
+            }
+        }
+
+        colors = std::move(reducedColors);
+        indexes = std::move(reducedIndexes);
+
+        LOG_DEBUG("gif image color palette was reduced to ", colors.size(), " colors ");
     }
 
     while (colors.size() < minimumColorsPerTable)
@@ -348,9 +368,10 @@ std::pair<std::vector<Color>, std::vector<int>> getImageColors(const Image& imag
     return {std::move(colors), std::move(indexes)};
 }
 
-template<typename Cluster>
-std::vector<uint8_t> getGifBinary(const Image& image, Cluster&& cluster)
+std::vector<uint8_t> getGifBinary(const Image& image, const Optimization)
 {
+    LOG_DEBUG("generating gif image binary");
+
     if (image.empty())
     {
         THROW(std::invalid_argument, "gif image cannot be empty");
@@ -360,28 +381,31 @@ std::vector<uint8_t> getGifBinary(const Image& image, Cluster&& cluster)
 
     writeHeader(bytes);
 
-    const auto [colors, indexes] = getImageColors(image, std::forward<Cluster>(cluster));
-    const auto globalColorsCount = static_cast<int>(colors.size());
-    const auto delay = 0;
+    const auto globalColorsCount = 0;
 
     writeLogicalScreen(bytes, image.width(), image.height(), globalColorsCount);
-    writeColorTable(bytes, colors);
+
+    const auto delay = 0;
+
     writeGraphicControlExtension(bytes, delay);
 
-    const auto localColorsCount = 0;
+    const auto [colors, indexes] = getImageColors(image);
+    const auto localColorsCount = static_cast<int>(colors.size());
 
     writeImageDescriptor(bytes, image.width(), image.height(), localColorsCount);
-    writeImageData(bytes, indexes, globalColorsCount);
+    writeColorTable(bytes, colors);
+    writeImageData(bytes, indexes, localColorsCount);
 
     bytes.push_back(trailer);
 
     return bytes;
 }
 
-template<typename Cluster>
 std::vector<uint8_t> getGifBinary(const std::vector<const Image*>& frames, const int periodCentiseconds,
-                                  Cluster&& cluster)
+                                  const Optimization)
 {
+    LOG_DEBUG("generating gif animation binary with ", frames.size(), " frames and ", periodCentiseconds, " cs period");
+
     if (frames.empty())
     {
         THROW(std::invalid_argument, "gif animation frames cannot be empty");
@@ -396,7 +420,7 @@ std::vector<uint8_t> getGifBinary(const std::vector<const Image*>& frames, const
     const auto globalColorsCount = 0;
 
     writeLogicalScreen(bytes, width, height, globalColorsCount);
-    writeApplicationExtension(bytes);
+    writeAnimationApplicationExtension(bytes);
 
     for (const auto frame : frames)
     {
@@ -417,7 +441,7 @@ std::vector<uint8_t> getGifBinary(const std::vector<const Image*>& frames, const
 
         writeGraphicControlExtension(bytes, periodCentiseconds);
 
-        const auto [colors, indexes] = getImageColors(*frame, std::forward<Cluster>(cluster));
+        const auto [colors, indexes] = getImageColors(*frame);
         const auto localColorsCount = static_cast<int>(colors.size());
 
         writeImageDescriptor(bytes, width, height, localColorsCount);
@@ -430,36 +454,16 @@ std::vector<uint8_t> getGifBinary(const std::vector<const Image*>& frames, const
     return bytes;
 }
 
-std::vector<uint8_t> getGifBinary(const Image& image)
+void writeGifFile(const std::string& path, const dansandu::canvas::image::Image& image, const Optimization optimization)
 {
-    return getGifBinary(image, kMeans);
-}
-
-std::vector<uint8_t> getGifBinary(const std::vector<const Image*>& frames, const int periodCentiseconds)
-{
-    return getGifBinary(frames, periodCentiseconds, kMeans);
-}
-
-std::vector<uint8_t> testGetGifBinary(const Image& image)
-{
-    return getGifBinary(image, testKmeans);
-}
-
-std::vector<uint8_t> testGetGifBinary(const std::vector<const Image*>& frames, const int periodCentiseconds)
-{
-    return getGifBinary(frames, periodCentiseconds, testKmeans);
-}
-
-void writeGifFile(const std::string& path, const dansandu::canvas::image::Image& image)
-{
-    const auto binary = getGifBinary(image);
+    const auto binary = getGifBinary(image, optimization);
     writeBinaryFile(path, binary);
 }
 
 void writeGifFile(const std::string& path, const std::vector<const dansandu::canvas::image::Image*>& frames,
-                  const int periodCentiseconds)
+                  const int periodCentiseconds, const Optimization optimization)
 {
-    const auto binary = getGifBinary(frames, periodCentiseconds);
+    const auto binary = getGifBinary(frames, periodCentiseconds, optimization);
     writeBinaryFile(path, binary);
 }
 

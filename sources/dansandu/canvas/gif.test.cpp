@@ -1,8 +1,8 @@
+#include "dansandu/canvas/gif.hpp"
 #include "catchorg/catch/catch.hpp"
 #include "dansandu/ballotin/file_system.hpp"
 #include "dansandu/canvas/bitmap.hpp"
 #include "dansandu/canvas/color.hpp"
-#include "dansandu/canvas/gif.hpp"
 #include "dansandu/canvas/image.hpp"
 #include "dansandu/range/range.hpp"
 
@@ -10,19 +10,18 @@
 #include <vector>
 
 using dansandu::ballotin::file_system::readBinaryFile;
+using dansandu::ballotin::file_system::writeBinaryFile;
 using dansandu::canvas::bitmap::readBitmapFile;
 using dansandu::canvas::color::Color;
 using dansandu::canvas::color::Colors;
+using dansandu::canvas::gif::getGifBinary;
 using dansandu::canvas::gif::lzw;
-using dansandu::canvas::gif::testGetGifBinary;
+using dansandu::canvas::gif::writeGifFile;
 using dansandu::canvas::image::Image;
-using dansandu::range::range::operator|;
-using dansandu::range::range::forEach;
-using dansandu::range::range::integers;
-using dansandu::range::range::map;
-using dansandu::range::range::toVector;
 
 using bytes_type = std::vector<uint8_t>;
+
+using namespace dansandu::range::range;
 
 TEST_CASE("gif")
 {
@@ -112,11 +111,11 @@ TEST_CASE("gif")
         // clang-format on
 
         const auto expected = std::vector<int>{
-            {0x47, 0x49, 0x46, 0x38, 0x39, 0x61, 0x03, 0x00, 0x05, 0x00, 0xF1, 0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0x00,
-             0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0xFF, 0x21, 0xF9, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x2C, 0x00, 0x00,
-             0x00, 0x00, 0x03, 0x00, 0x05, 0x00, 0x00, 0x02, 0x05, 0x44, 0x2E, 0x17, 0xA3, 0x5A, 0x00, 0x3B}};
+            {0x47, 0x49, 0x46, 0x38, 0x39, 0x61, 0x03, 0x00, 0x05, 0x00, 0x70, 0x00, 0x00, 0x21, 0xF9, 0x04, 0x00, 0x00,
+             0x00, 0x00, 0x00, 0x2C, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x05, 0x00, 0x81, 0xFF, 0x00, 0x00, 0x00, 0x00,
+             0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0xFF, 0x02, 0x05, 0x44, 0x2E, 0x17, 0xA3, 0x5A, 0x00, 0x3B}};
 
-        const auto binary = testGetGifBinary(image);
+        const auto binary = getGifBinary(image);
         const auto actual = binary | map(toInt) | toVector();
 
         REQUIRE(expected == actual);
@@ -124,9 +123,11 @@ TEST_CASE("gif")
 
     SECTION("small animation")
     {
-        const auto images = std::vector<Color>{{Colors::red, Colors::green, Colors::blue}} | map([](const auto color) {
-                                return Image{5, 5, color};
-                            }) |
+        const auto images = std::vector<Color>{{Colors::red, Colors::green, Colors::blue}} |
+                            map(
+                                [](const auto color) {
+                                    return Image{5, 5, color};
+                                }) |
                             toVector();
         const auto frames = images | map([](const auto& f) { return &f; }) | toVector();
         const auto periodCentiseconds = 100;
@@ -142,18 +143,57 @@ TEST_CASE("gif")
              0x00, 0x00, 0x2C, 0x00, 0x00, 0x00, 0x00, 0x05, 0x00, 0x05, 0x00, 0x81, 0x00, 0x00, 0xFF, 0x00,
              0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x04, 0x84, 0x8F, 0xA9, 0x58, 0x00, 0x3B}};
 
-        const auto binary = testGetGifBinary(frames, periodCentiseconds);
+        const auto binary = getGifBinary(frames, periodCentiseconds);
         const auto actual = binary | map(toInt) | toVector();
 
         REQUIRE(expected == actual);
     }
 
-    SECTION("image")
+    SECTION("image optimized for space")
     {
-        const auto expected = readBinaryFile("resources/dansandu/canvas/expected_image.gif");
+        const auto expected = readBinaryFile("resources/dansandu/canvas/expected_image_space.gif");
         const auto image = readBitmapFile("resources/dansandu/canvas/expected_flower.bmp");
-        const auto actual = testGetGifBinary(image);
+        const auto actual = getGifBinary(image);
 
-        REQUIRE(expected == actual);
+        if (expected != actual)
+        {
+            writeBinaryFile("target/test_actual_image_space.gif", actual);
+
+            FAIL("image binary do not match -- check target/test_actual_image_space.gif");
+        }
+        else
+        {
+            SUCCEED("image binary match");
+        }
+    }
+
+    SECTION("large animation")
+    {
+        const auto expected = readBinaryFile("resources/dansandu/canvas/expected_animation.gif");
+
+        const auto images = std::vector<Image>{{readBitmapFile("resources/dansandu/canvas/frame0.bmp"),
+                                                readBitmapFile("resources/dansandu/canvas/frame1.bmp"),
+                                                readBitmapFile("resources/dansandu/canvas/frame2.bmp"),
+                                                readBitmapFile("resources/dansandu/canvas/frame3.bmp"),
+                                                readBitmapFile("resources/dansandu/canvas/frame4.bmp"),
+                                                readBitmapFile("resources/dansandu/canvas/frame5.bmp"),
+                                                readBitmapFile("resources/dansandu/canvas/frame6.bmp"),
+                                                readBitmapFile("resources/dansandu/canvas/frame7.bmp"),
+                                                readBitmapFile("resources/dansandu/canvas/frame8.bmp")}};
+
+        const auto frames = images | map([](const auto& image) { return &image; }) | toVector();
+        const auto delayCentiseconds = 20;
+        const auto actual = getGifBinary(frames, delayCentiseconds);
+
+        if (expected != actual)
+        {
+            writeBinaryFile("target/test_actual_animation.gif", actual);
+
+            FAIL("animation binary do not match -- check target/test_actual_animation.gif");
+        }
+        else
+        {
+            SUCCEED("animation binary match");
+        }
     }
 }
