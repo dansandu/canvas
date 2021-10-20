@@ -175,7 +175,16 @@ static void writeAnimationApplicationExtension(std::vector<uint8_t>& bytes, cons
     bytes.push_back(blockTerminator);
 }
 
-static void writeGraphicControlExtension(std::vector<uint8_t>& bytes, const unsigned delayCentiseconds)
+enum class DisposalMethod
+{
+    NotSpecified = 0,
+    DoNotDispose = 1,
+    RestoreToBackgroundColor = 2,
+    RestoreToPrevious = 3
+};
+
+static void writeGraphicControlExtension(std::vector<uint8_t>& bytes, const unsigned delayCentiseconds,
+                                         const DisposalMethod disposalMethod)
 {
     bytes.push_back(extensionIntroducer);
 
@@ -190,7 +199,7 @@ static void writeGraphicControlExtension(std::vector<uint8_t>& bytes, const unsi
     // +----------+-----------------+-----------------+------------------------+
     // | 000      | 000             | 0               | 0                      |
     // +----------+-----------------+-----------------+------------------------+
-    const auto disposal = 0;
+    const auto disposal = static_cast<int>(disposalMethod);
     const auto userInput = false;
     const auto transparentColor = false;
     const auto packedFields = (disposal << 2) | (userInput << 1) | transparentColor;
@@ -205,19 +214,20 @@ static void writeGraphicControlExtension(std::vector<uint8_t>& bytes, const unsi
     bytes.push_back(blockTerminator);
 }
 
-static void writeImageDescriptor(std::vector<uint8_t>& bytes, const unsigned width, const unsigned height,
-                                 const int localColorTableSize)
+static void writeImageDescriptor(std::vector<uint8_t>& bytes, const unsigned x0, const unsigned y0,
+                                 const unsigned width, const unsigned height, const int localColorTableSize)
 {
+    LOG_DEBUG("writing image descriptor for [", x0, ", ", x0 + width, ") x [", y0, ", ", y0 + width,
+              ") section of logical screen");
+
     const auto imageDescriptorLabel = 0x2C;
     bytes.push_back(imageDescriptorLabel);
 
-    const auto imageLeftPosition = 0;
-    bytes.push_back((imageLeftPosition >> 0) & 0xFF);
-    bytes.push_back((imageLeftPosition >> 8) & 0xFF);
+    bytes.push_back((x0 >> 0) & 0xFF);
+    bytes.push_back((x0 >> 8) & 0xFF);
 
-    const auto imageTopPosition = 0;
-    bytes.push_back((imageTopPosition >> 0) & 0xFF);
-    bytes.push_back((imageTopPosition >> 8) & 0xFF);
+    bytes.push_back((y0 >> 0) & 0xFF);
+    bytes.push_back((y0 >> 8) & 0xFF);
 
     bytes.push_back((width >> 0) & 0xFF);
     bytes.push_back((width >> 8) & 0xFF);
@@ -304,18 +314,25 @@ static void writeImageData(std::vector<uint8_t>& bytes, const std::vector<int>& 
     bytes.push_back(blockTerminator);
 }
 
-static std::pair<std::vector<Color>, std::vector<int>> getImageColors(const Image& image)
+static std::pair<std::vector<Color>, std::vector<int>> getImageColors(const Image& image, const int x0, const int y0,
+                                                                      const int width, const int height)
 {
     auto colors = std::vector<Color>{};
     auto indexes = std::vector<int>{};
 
-    for (const auto color : image)
+    const auto widthBound = std::min(x0 + width, image.width());
+    const auto heightBound = std::min(y0 + height, image.height());
+    for (auto y = y0; y < heightBound; ++y)
     {
-        const auto position = std::find(colors.cbegin(), colors.cend(), color);
-        indexes.push_back(position - colors.cbegin());
-        if (position == colors.cend())
+        for (auto x = x0; x < widthBound; ++x)
         {
-            colors.push_back(color);
+            const auto color = image(x, y);
+            const auto position = std::find(colors.cbegin(), colors.cend(), color);
+            indexes.push_back(position - colors.cbegin());
+            if (position == colors.cend())
+            {
+                colors.push_back(color);
+            }
         }
     }
 
@@ -368,7 +385,7 @@ static std::pair<std::vector<Color>, std::vector<int>> getImageColors(const Imag
     return {std::move(colors), std::move(indexes)};
 }
 
-std::vector<uint8_t> getGifBinary(const Image& image, const Optimization)
+std::vector<uint8_t> getGifBinary(const Image& image)
 {
     LOG_DEBUG("generating gif image binary");
 
@@ -385,14 +402,12 @@ std::vector<uint8_t> getGifBinary(const Image& image, const Optimization)
 
     writeLogicalScreen(bytes, image.width(), image.height(), globalColorsCount);
 
-    const auto delay = 0;
-
-    writeGraphicControlExtension(bytes, delay);
-
-    const auto [colors, indexes] = getImageColors(image);
+    const auto x0 = 0;
+    const auto y0 = 0;
+    const auto [colors, indexes] = getImageColors(image, x0, y0, image.width(), image.height());
     const auto localColorsCount = static_cast<int>(colors.size());
 
-    writeImageDescriptor(bytes, image.width(), image.height(), localColorsCount);
+    writeImageDescriptor(bytes, x0, y0, image.width(), image.height(), localColorsCount);
     writeColorTable(bytes, colors);
     writeImageData(bytes, indexes, localColorsCount);
 
@@ -401,8 +416,7 @@ std::vector<uint8_t> getGifBinary(const Image& image, const Optimization)
     return bytes;
 }
 
-std::vector<uint8_t> getGifBinary(const std::vector<const Image*>& frames, const int periodCentiseconds,
-                                  const Optimization)
+std::vector<uint8_t> getGifBinary(const std::vector<const Image*>& frames, const int periodCentiseconds)
 {
     LOG_DEBUG("generating gif animation binary with ", frames.size(), " frames and ", periodCentiseconds, " cs period");
 
@@ -439,12 +453,14 @@ std::vector<uint8_t> getGifBinary(const std::vector<const Image*>& frames, const
             THROW(std::invalid_argument, "gif animation frames do not match in size");
         }
 
-        writeGraphicControlExtension(bytes, periodCentiseconds);
+        writeGraphicControlExtension(bytes, periodCentiseconds, DisposalMethod::NotSpecified);
 
-        const auto [colors, indexes] = getImageColors(*frame);
+        const auto x0 = 0;
+        const auto y0 = 0;
+        const auto [colors, indexes] = getImageColors(*frame, x0, y0, frame->width(), frame->height());
         const auto localColorsCount = static_cast<int>(colors.size());
 
-        writeImageDescriptor(bytes, width, height, localColorsCount);
+        writeImageDescriptor(bytes, x0, y0, width, height, localColorsCount);
         writeColorTable(bytes, colors);
         writeImageData(bytes, indexes, localColorsCount);
     }
@@ -454,16 +470,16 @@ std::vector<uint8_t> getGifBinary(const std::vector<const Image*>& frames, const
     return bytes;
 }
 
-void writeGifFile(const std::string& path, const dansandu::canvas::image::Image& image, const Optimization optimization)
+void writeGifFile(const std::string& path, const dansandu::canvas::image::Image& image)
 {
-    const auto binary = getGifBinary(image, optimization);
+    const auto binary = getGifBinary(image);
     writeBinaryFile(path, binary);
 }
 
 void writeGifFile(const std::string& path, const std::vector<const dansandu::canvas::image::Image*>& frames,
-                  const int periodCentiseconds, const Optimization optimization)
+                  const int periodCentiseconds)
 {
-    const auto binary = getGifBinary(frames, periodCentiseconds, optimization);
+    const auto binary = getGifBinary(frames, periodCentiseconds);
     writeBinaryFile(path, binary);
 }
 
