@@ -80,12 +80,12 @@ public:
         return colors_[index(x, y)];
     }
 
-    Color& operator()(dansandu::math::matrix::ConstantMatrixView<size_type, 1, 2> point)
+    Color& operator()(const dansandu::math::matrix::Matrix<size_type, 1, 2> point)
     {
         return colors_[index(point.x(), point.y())];
     }
 
-    Color operator()(dansandu::math::matrix::ConstantMatrixView<size_type, 1, 2> point) const
+    Color operator()(const dansandu::math::matrix::Matrix<size_type, 1, 2> point) const
     {
         return colors_[index(point.x(), point.y())];
     }
