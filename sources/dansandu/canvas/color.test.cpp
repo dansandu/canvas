@@ -1,6 +1,8 @@
 #include "dansandu/canvas/color.hpp"
 #include "catchorg/catch/catch.hpp"
 
+#include <sstream>
+
 using dansandu::canvas::color::Color;
 using dansandu::canvas::color::Colors;
 
@@ -8,8 +10,8 @@ TEST_CASE("color")
 {
     SECTION("code channels")
     {
-        auto code = 0xF5654321U;
-        auto color = Color{code};
+        const auto code = 0xF5654321U;
+        const auto color = Color{code};
 
         REQUIRE(color.red() == 0xF5U);
         REQUIRE(color.green() == 0x65U);
@@ -20,8 +22,8 @@ TEST_CASE("color")
 
     SECTION("equality")
     {
-        auto red = Color{Colors::red};
-        auto green = Color{Colors::green};
+        const auto red = Color{Colors::red};
+        const auto green = Color{Colors::green};
 
         REQUIRE(red == red);
 
@@ -30,7 +32,7 @@ TEST_CASE("color")
 
     SECTION("red channel")
     {
-        auto color = Color{Colors::red};
+        const auto color = Color{Colors::red};
 
         REQUIRE(color.red() == 255);
         REQUIRE(color.green() == 0);
@@ -40,7 +42,7 @@ TEST_CASE("color")
 
     SECTION("green channel")
     {
-        auto color = Color{Colors::green};
+        const auto color = Color{Colors::green};
 
         REQUIRE(color.red() == 0);
         REQUIRE(color.green() == 255);
@@ -50,7 +52,7 @@ TEST_CASE("color")
 
     SECTION("blue channel")
     {
-        auto color = Color{Colors::blue};
+        const auto color = Color{Colors::blue};
 
         REQUIRE(color.red() == 0);
         REQUIRE(color.green() == 0);
@@ -61,7 +63,7 @@ TEST_CASE("color")
 
     SECTION("alpha channel")
     {
-        auto color = Color{Colors::black};
+        const auto color = Color{Colors::black};
 
         REQUIRE(color.red() == 0);
         REQUIRE(color.green() == 0);
@@ -77,10 +79,18 @@ TEST_CASE("color")
 
     SECTION("hash")
     {
-        auto color = Color{Colors::rust};
-        auto actualHash = std::hash<Color>{}(color);
-        auto expectedHash = std::hash<uint32_t>{}(static_cast<uint32_t>(Colors::rust));
+        const auto color = Color{Colors::rust};
+        const auto actualHash = std::hash<Color>{}(color);
+        const auto expectedHash = std::hash<uint32_t>{}(static_cast<uint32_t>(Colors::rust));
 
         REQUIRE(actualHash == expectedHash);
+    }
+
+    SECTION("string")
+    {
+        auto stream = std::stringstream{};
+        stream << Colors::khaki;
+
+        REQUIRE(stream.str() == "#C3B091FF");
     }
 }
