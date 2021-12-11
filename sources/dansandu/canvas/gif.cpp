@@ -76,7 +76,7 @@ std::pair<std::vector<uint8_t>, int> lzw(const std::vector<int>& input, const in
         {
             pushBits(output, bitsCount, code, codeSize);
 
-            if ((1 << codeSize) <= clearCode + 2 + dictionary.size())
+            if ((1 << codeSize) <= clearCode + 2 + static_cast<int>(dictionary.size()))
             {
                 if (codeSize < maximumCodeSize)
                 {

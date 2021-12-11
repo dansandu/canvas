@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <ostream>
 #include <utility>
 
 namespace dansandu::canvas::color

@@ -112,7 +112,7 @@ public:
 
     bool empty() const noexcept
     {
-        return width_ == 0 | height_ == 0;
+        return (width_ == 0) | (height_ == 0);
     }
 
     const uint8_t* bytes() const noexcept
