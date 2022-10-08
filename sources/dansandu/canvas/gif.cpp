@@ -217,9 +217,6 @@ static void writeGraphicControlExtension(std::vector<uint8_t>& bytes, const unsi
 static void writeImageDescriptor(std::vector<uint8_t>& bytes, const unsigned x0, const unsigned y0,
                                  const unsigned width, const unsigned height, const int localColorTableSize)
 {
-    LOG_DEBUG("writing image descriptor for [", x0, ", ", x0 + width, ") x [", y0, ", ", y0 + width,
-              ") section of logical screen");
-
     const auto imageDescriptorLabel = 0x2C;
     bytes.push_back(imageDescriptorLabel);
 
@@ -258,8 +255,6 @@ static void writeImageDescriptor(std::vector<uint8_t>& bytes, const unsigned x0,
 
 static void writeColorTable(std::vector<uint8_t>& bytes, const std::vector<Color>& colors)
 {
-    LOG_DEBUG("writing color table with ", colors.size(), " colors");
-
     for (const auto color : colors)
     {
         bytes.push_back(color.red());
@@ -288,10 +283,6 @@ static void writeImageData(std::vector<uint8_t>& bytes, const std::vector<int>& 
     const auto output = lzw(indexes, codeSize);
     const auto& lzwOutput = output.first;
     const auto minimumCodeSize = output.second;
-
-    LOG_DEBUG("lzw coding with minimum code size ", minimumCodeSize, ", code size ", codeSize, " and output of ",
-              lzwOutput.size(), " bytes");
-
     const auto lzwOutputSize = static_cast<int>(lzwOutput.size());
 
     bytes.push_back(minimumCodeSize);
@@ -338,9 +329,6 @@ static std::pair<std::vector<Color>, std::vector<int>> getImageColors(const Imag
 
     if (static_cast<int>(colors.size()) > maximumColorsPerTable)
     {
-        LOG_DEBUG("gif image color palette is of size ", colors.size(), " which exceeds maximum palette size of ",
-                  maximumColorsPerTable, " and requires compression");
-
         auto reducedColors = std::vector<Color>{};
         auto reducedIndexes = std::vector<int>{};
 
@@ -373,8 +361,6 @@ static std::pair<std::vector<Color>, std::vector<int>> getImageColors(const Imag
 
         colors = std::move(reducedColors);
         indexes = std::move(reducedIndexes);
-
-        LOG_DEBUG("gif image color palette was reduced to ", colors.size(), " colors ");
     }
 
     while (colors.size() < minimumColorsPerTable)
