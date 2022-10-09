@@ -149,6 +149,31 @@ TEST_CASE("gif")
         REQUIRE(expected == actual);
     }
 
+    SECTION("rgb")
+    {
+        auto image = Image{2, 3};
+        image(0, 0) = Colors::red;
+        image(1, 0) = Colors::green;
+        image(0, 1) = Colors::blue;
+        image(1, 1) = Colors::magenta;
+        image(0, 2) = Colors::pink;
+        image(1, 2) = Colors::darkGreen;
+
+        const auto expected = readBinaryFile("resources/dansandu/canvas/expected_rgb.gif");
+        const auto actual = getGifBinary(image);
+
+        if (expected == actual)
+        {
+            SUCCEED("images match");
+        }
+        else
+        {
+            writeBinaryFile("target/actual_rgb.gif", actual);
+            FAIL("actual image does not match expected image resources/dansandu/canvas/expected_rgb.gif -- check "
+                 "target/actual_rgb.gif for comparison");
+        }
+    }
+
     SECTION("large image")
     {
         const auto expected = readBinaryFile("resources/dansandu/canvas/expected_image.gif");
