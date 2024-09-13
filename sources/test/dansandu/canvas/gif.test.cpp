@@ -16,7 +16,6 @@ using dansandu::canvas::color::Color;
 using dansandu::canvas::color::Colors;
 using dansandu::canvas::gif::getGifBinary;
 using dansandu::canvas::gif::lzw;
-using dansandu::canvas::gif::writeGifFile;
 using dansandu::canvas::image::Image;
 
 using bytes_type = std::vector<uint8_t>;
@@ -159,7 +158,7 @@ TEST_CASE("gif")
         image(0, 2) = Colors::pink;
         image(1, 2) = Colors::darkGreen;
 
-        const auto expected = readBinaryFile("resources/dansandu/canvas/expected_rgb.gif");
+        const auto expected = readBinaryFile("resources/test/dansandu/canvas/expected_rgb.gif");
         const auto actual = getGifBinary(image);
 
         if (expected == actual)
@@ -168,23 +167,23 @@ TEST_CASE("gif")
         }
         else
         {
-            writeBinaryFile("target/actual_rgb.gif", actual);
-            FAIL("actual image does not match expected image resources/dansandu/canvas/expected_rgb.gif -- check "
-                 "target/actual_rgb.gif for comparison");
+            writeBinaryFile("target/temporary/actual_rgb.gif", actual);
+            FAIL("actual image does not match expected image resources/test/dansandu/canvas/expected_rgb.gif -- check "
+                 "target/temporary/actual_rgb.gif for comparison");
         }
     }
 
     SECTION("large image")
     {
-        const auto expected = readBinaryFile("resources/dansandu/canvas/expected_image.gif");
-        const auto image = readBitmapFile("resources/dansandu/canvas/expected_flower.bmp");
+        const auto expected = readBinaryFile("resources/test/dansandu/canvas/expected_image.gif");
+        const auto image = readBitmapFile("resources/test/dansandu/canvas/expected_flower.bmp");
         const auto actual = getGifBinary(image);
 
         if (expected != actual)
         {
-            writeBinaryFile("target/test_actual_image_space.gif", actual);
+            writeBinaryFile("target/temporary/test_actual_image_space.gif", actual);
 
-            FAIL("image binary do not match -- check target/test_actual_image.gif");
+            FAIL("image binary do not match -- check target/temporary/test_actual_image.gif");
         }
         else
         {
@@ -194,17 +193,17 @@ TEST_CASE("gif")
 
     SECTION("large animation")
     {
-        const auto expected = readBinaryFile("resources/dansandu/canvas/expected_animation.gif");
+        const auto expected = readBinaryFile("resources/test/dansandu/canvas/expected_animation.gif");
 
-        const auto images = std::vector<Image>{{readBitmapFile("resources/dansandu/canvas/frame0.bmp"),
-                                                readBitmapFile("resources/dansandu/canvas/frame1.bmp"),
-                                                readBitmapFile("resources/dansandu/canvas/frame2.bmp"),
-                                                readBitmapFile("resources/dansandu/canvas/frame3.bmp"),
-                                                readBitmapFile("resources/dansandu/canvas/frame4.bmp"),
-                                                readBitmapFile("resources/dansandu/canvas/frame5.bmp"),
-                                                readBitmapFile("resources/dansandu/canvas/frame6.bmp"),
-                                                readBitmapFile("resources/dansandu/canvas/frame7.bmp"),
-                                                readBitmapFile("resources/dansandu/canvas/frame8.bmp")}};
+        const auto images = std::vector<Image>{{readBitmapFile("resources/test/dansandu/canvas/frame0.bmp"),
+                                                readBitmapFile("resources/test/dansandu/canvas/frame1.bmp"),
+                                                readBitmapFile("resources/test/dansandu/canvas/frame2.bmp"),
+                                                readBitmapFile("resources/test/dansandu/canvas/frame3.bmp"),
+                                                readBitmapFile("resources/test/dansandu/canvas/frame4.bmp"),
+                                                readBitmapFile("resources/test/dansandu/canvas/frame5.bmp"),
+                                                readBitmapFile("resources/test/dansandu/canvas/frame6.bmp"),
+                                                readBitmapFile("resources/test/dansandu/canvas/frame7.bmp"),
+                                                readBitmapFile("resources/test/dansandu/canvas/frame8.bmp")}};
 
         const auto frames = images | map([](const auto& image) { return &image; }) | toVector();
         const auto delayCentiseconds = 20;
@@ -212,9 +211,9 @@ TEST_CASE("gif")
 
         if (expected != actual)
         {
-            writeBinaryFile("target/test_actual_animation.gif", actual);
+            writeBinaryFile("target/temporary/test_actual_animation.gif", actual);
 
-            FAIL("animation binary do not match -- check target/test_actual_animation.gif");
+            FAIL("animation binary do not match -- check target/temporary/test_actual_animation.gif");
         }
         else
         {

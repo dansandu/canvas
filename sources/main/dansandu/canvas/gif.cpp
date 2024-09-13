@@ -11,6 +11,7 @@
 
 using dansandu::ballotin::binary::pushBits;
 using dansandu::ballotin::file_system::writeBinaryFile;
+using dansandu::ballotin::logging::LogDebug;
 using dansandu::canvas::color::Color;
 using dansandu::canvas::color::Colors;
 using dansandu::canvas::image::Image;
@@ -373,7 +374,7 @@ static std::pair<std::vector<Color>, std::vector<int>> getImageColors(const Imag
 
 std::vector<uint8_t> getGifBinary(const Image& image)
 {
-    LOG_DEBUG("generating gif image binary");
+    LogDebug("generating gif image binary");
 
     if (image.empty())
     {
@@ -404,7 +405,7 @@ std::vector<uint8_t> getGifBinary(const Image& image)
 
 std::vector<uint8_t> getGifBinary(const std::vector<const Image*>& frames, const int periodCentiseconds)
 {
-    LOG_DEBUG("generating gif animation binary with ", frames.size(), " frames and ", periodCentiseconds, " cs period");
+    LogDebug("generating gif animation binary with ", frames.size(), " frames and ", periodCentiseconds, " cs period");
 
     if (frames.empty())
     {
