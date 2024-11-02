@@ -1,92 +1,24 @@
-#define CATCH_CONFIG_RUNNER
+#include "dansandu/radiance/progress_bar_console_reporter.hpp"
+#include "dansandu/radiance/test_case_registry.hpp"
+#include "dansandu/radiance/utility.hpp"
 
-#include "catchorg/catch/catch.hpp"
-#include "dansandu/ballotin/environment.hpp"
-#include "dansandu/ballotin/file_system.hpp"
-#include "dansandu/ballotin/logging.hpp"
-#include "dansandu/ballotin/progress_bar.hpp"
+#include <string>
 
-using dansandu::ballotin::environment::getEnvironmentVariable;
-using dansandu::ballotin::file_system::writeToStandardOutput;
-using dansandu::ballotin::logging::Level;
-using dansandu::ballotin::logging::LogError;
-using dansandu::ballotin::logging::LogFileHandler;
-using dansandu::ballotin::logging::Logger;
-using dansandu::ballotin::logging::LogInfo;
-using dansandu::ballotin::progress_bar::ProgressBar;
+using dansandu::radiance::progress_bar_console_reporter::ProgressBarConsoleReporter;
+using dansandu::radiance::test_case_registry::TestCaseRegistry;
+using dansandu::radiance::utility::getEnvironmentVariable;
 
-class ProgressBarListener : public Catch::TestEventListenerBase
+int main(const int, const char* const* const)
 {
-public:
-    ProgressBarListener(Catch::ReporterConfig const& _config) : TestEventListenerBase(_config)
-    {
-        std::set<Catch::TestCase const*> tests;
-        const auto& allTestCases = getAllTestCasesSorted(*m_config);
-        Catch::TestSpec::Matches matches = _config.fullConfig()->testSpec().matchesByFilter(allTestCases, *m_config);
-        const auto& invalidArgs = _config.fullConfig()->testSpec().getInvalidArgs();
+    const auto stageIndexString = getEnvironmentVariable("PRALINE_PROGRESS_BAR_STAGE_INDEX");
+    const auto stageIndex = stageIndexString.has_value() ? std::stoi(stageIndexString.value()) : 0;
 
-        if (matches.empty() && invalidArgs.empty())
-        {
-            for (auto const& test : allTestCases)
-                if (!test.isHidden())
-                    tests.emplace(&test);
-        }
-        else
-        {
-            for (auto const& match : matches)
-                tests.insert(match.tests.begin(), match.tests.end());
-        }
+    const auto stageCountString = getEnvironmentVariable("PRALINE_PROGRESS_BAR_STAGE_COUNT");
+    const auto stageCount = stageCountString.has_value() ? std::stoi(stageCountString.value()) : 0;
 
-        const auto header = std::string{"test"};
-        const auto headerSize = getEnvironmentVariable("PRALINE_PROGRESS_BAR_HEADER_LENGTH");
+    auto reporter = ProgressBarConsoleReporter{stageIndex, stageCount};
 
-        progressBar_ = std::make_unique<ProgressBar>(
-            header, headerSize.has_value() ? std::stoi(headerSize.value()) : header.size(), tests.size(),
-            [](const auto& text)
-            {
-                std::cout << text;
-                std::cout.flush();
-            });
-    }
+    const auto testSuiteResult = TestCaseRegistry::instance().runAllTestCases(reporter);
 
-    void testCaseStarting(Catch::TestCaseInfo const& testInfo) override
-    {
-        progressBar_->updateSummary(testInfo.name);
-        LogInfo("Starting test case '", testInfo.name, "'");
-    }
-
-    void testCaseEnded(Catch::TestCaseStats const& testCaseStats) override
-    {
-        progressBar_->advance();
-        LogInfo("Ending test case '", testCaseStats.testInfo.name, "'");
-    }
-
-    void testGroupEnded(Catch::TestGroupStats const& testGroupStats) override
-    {
-        progressBar_.reset();
-    }
-
-private:
-    std::unique_ptr<ProgressBar> progressBar_;
-};
-
-CATCH_REGISTER_LISTENER(ProgressBarListener);
-
-int main(const int argumentsCount, const char* const* const arguments)
-{
-    auto unitTestsHandler = LogFileHandler{"unit_tests.log"};
-
-    auto& logger = Logger::globalInstance();
-    logger.setLevel(Level::debug);
-    logger.addHandler(L"UnitTests", Level::debug, unitTestsHandler);
-
-    const auto catchResult = Catch::Session().run(argumentsCount, arguments);
-
-    if (unitTestsHandler.warningsLogged())
-    {
-        writeToStandardOutput("Tests failed: criticals, errors or warnings were logged\n");
-        return -1;
-    }
-
-    return catchResult;
+    return !testSuiteResult.testSuiteSuccess;
 }
