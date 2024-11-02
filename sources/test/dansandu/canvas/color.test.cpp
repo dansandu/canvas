@@ -1,5 +1,5 @@
 #include "dansandu/canvas/color.hpp"
-#include "catchorg/catch/catch.hpp"
+#include "dansandu/radiance/radiance.hpp"
 
 #include <sstream>
 

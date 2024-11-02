@@ -1,5 +1,5 @@
 #include "dansandu/canvas/image.hpp"
-#include "catchorg/catch/catch.hpp"
+#include "dansandu/radiance/radiance.hpp"
 
 #include <cstdint>
 
@@ -30,8 +30,8 @@ TEST_CASE("image")
 
         SECTION("indexing outside bounds")
         {
-            REQUIRE_THROWS_AS(image(10, 20), std::out_of_range);
-            REQUIRE_THROWS_AS(image(15, 10), std::out_of_range);
+            REQUIRE_THROW(image(10, 20), std::out_of_range);
+            REQUIRE_THROW(image(15, 10), std::out_of_range);
         }
     }
 

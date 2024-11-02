@@ -1,11 +1,11 @@
 #include "dansandu/canvas/gif.hpp"
-#include "catchorg/catch/catch.hpp"
 #include "dansandu/ballotin/file_system.hpp"
 #include "dansandu/canvas/bitmap.hpp"
 #include "dansandu/canvas/color.hpp"
 #include "dansandu/canvas/image.hpp"
-#include "dansandu/range/range.hpp"
+#include "dansandu/radiance/radiance.hpp"
 
+#include <ranges>
 #include <string_view>
 #include <vector>
 
@@ -18,9 +18,27 @@ using dansandu::canvas::gif::getGifBinary;
 using dansandu::canvas::gif::lzw;
 using dansandu::canvas::image::Image;
 
-using bytes_type = std::vector<uint8_t>;
+using BytesType = std::vector<uint8_t>;
 
-using namespace dansandu::range::range;
+namespace
+{
+
+bool checkGifImage(const BytesType& actual, const std::string& fileName)
+{
+    const auto expected = readBinaryFile("resources/test/dansandu/canvas/expected_" + fileName);
+
+    if (expected != actual)
+    {
+        writeBinaryFile("target/temporary/actual_" + fileName, actual);
+
+        THROW(std::runtime_error, "actual image does not match expected image resources/test/dansandu/canvas/expected_",
+              fileName, " -- check target/temporary/actual_", fileName, " for comparison");
+    }
+
+    return true;
+}
+
+}
 
 TEST_CASE("gif")
 {
@@ -65,12 +83,13 @@ TEST_CASE("gif")
 
             // Output: 000 10000 | 1 10010 00 | 0100 0000 | 10 00101 0 | 10011 001 | 000 10001
 
-            const auto input = symbols | map([](auto c) { return static_cast<int>(c - 'A'); }) | toVector();
+            const auto input = symbols | std::views::transform([](auto c) { return static_cast<int>(c - 'A'); }) |
+                               std::ranges::to<std::vector>();
 
             const auto& [output, minimumCodeSize] = lzw(input, alphabetSize);
 
-            const bytes_type expectedOutput = {0b00010000U, 0b11001000U, 0b01000000U,
-                                               0b10001010U, 0b10011001U, 0b00010001U};
+            const BytesType expectedOutput = {0b00010000U, 0b11001000U, 0b01000000U,
+                                              0b10001010U, 0b10011001U, 0b00010001U};
             const auto expectedMinimumCodeSize = 4;
 
             REQUIRE(minimumCodeSize == expectedMinimumCodeSize);
@@ -86,7 +105,7 @@ TEST_CASE("gif")
 
             const auto& [output, minimumCodeSize] = lzw(input, alphabetSize);
 
-            const bytes_type expectedOutput = {0x00, 0x51, 0xFC, 0x1B, 0x28, 0x70, 0xA0, 0xC1, 0x83, 0x01, 0x01};
+            const BytesType expectedOutput = {0x00, 0x51, 0xFC, 0x1B, 0x28, 0x70, 0xA0, 0xC1, 0x83, 0x01, 0x01};
             const auto expectedMinimumCodeSize = 8;
 
             REQUIRE(output == expectedOutput);
@@ -115,7 +134,7 @@ TEST_CASE("gif")
                               0xFF, 0x00, 0x00, 0x00, 0xFF, 0x02, 0x05, 0x44, 0x2E, 0x17, 0xA3, 0x5A, 0x00, 0x3B}};
 
         const auto binary = getGifBinary(image);
-        const auto actual = binary | map(toInt) | toVector();
+        const auto actual = binary | std::views::transform(toInt) | std::ranges::to<std::vector>();
 
         REQUIRE(expected == actual);
     }
@@ -123,12 +142,15 @@ TEST_CASE("gif")
     SECTION("small animation")
     {
         const auto images = std::vector<Color>{{Colors::red, Colors::green, Colors::blue}} |
-                            map(
+                            std::views::transform(
                                 [](const auto color) {
                                     return Image{5, 5, color};
                                 }) |
-                            toVector();
-        const auto frames = images | map([](const auto& f) { return &f; }) | toVector();
+                            std::ranges::to<std::vector>();
+
+        const auto frames =
+            images | std::views::transform([](const auto& image) { return &image; }) | std::ranges::to<std::vector>();
+
         const auto periodCentiseconds = 100;
 
         const auto expected = std::vector<int>{
@@ -143,7 +165,7 @@ TEST_CASE("gif")
              0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x04, 0x84, 0x8F, 0xA9, 0x58, 0x00, 0x3B}};
 
         const auto binary = getGifBinary(frames, periodCentiseconds);
-        const auto actual = binary | map(toInt) | toVector();
+        const auto actual = binary | std::views::transform(toInt) | std::ranges::to<std::vector>();
 
         REQUIRE(expected == actual);
     }
@@ -158,43 +180,21 @@ TEST_CASE("gif")
         image(0, 2) = Colors::pink;
         image(1, 2) = Colors::darkGreen;
 
-        const auto expected = readBinaryFile("resources/test/dansandu/canvas/expected_rgb.gif");
         const auto actual = getGifBinary(image);
 
-        if (expected == actual)
-        {
-            SUCCEED("images match");
-        }
-        else
-        {
-            writeBinaryFile("target/temporary/actual_rgb.gif", actual);
-            FAIL("actual image does not match expected image resources/test/dansandu/canvas/expected_rgb.gif -- check "
-                 "target/temporary/actual_rgb.gif for comparison");
-        }
+        REQUIRE(checkGifImage(actual, "rgb.gif"));
     }
 
     SECTION("large image")
     {
-        const auto expected = readBinaryFile("resources/test/dansandu/canvas/expected_image.gif");
         const auto image = readBitmapFile("resources/test/dansandu/canvas/expected_flower.bmp");
         const auto actual = getGifBinary(image);
 
-        if (expected != actual)
-        {
-            writeBinaryFile("target/temporary/test_actual_image_space.gif", actual);
-
-            FAIL("image binary do not match -- check target/temporary/test_actual_image.gif");
-        }
-        else
-        {
-            SUCCEED("image binary match");
-        }
+        REQUIRE(checkGifImage(actual, "flower.gif"));
     }
 
     SECTION("large animation")
     {
-        const auto expected = readBinaryFile("resources/test/dansandu/canvas/expected_animation.gif");
-
         const auto images = std::vector<Image>{{readBitmapFile("resources/test/dansandu/canvas/frame0.bmp"),
                                                 readBitmapFile("resources/test/dansandu/canvas/frame1.bmp"),
                                                 readBitmapFile("resources/test/dansandu/canvas/frame2.bmp"),
@@ -205,19 +205,13 @@ TEST_CASE("gif")
                                                 readBitmapFile("resources/test/dansandu/canvas/frame7.bmp"),
                                                 readBitmapFile("resources/test/dansandu/canvas/frame8.bmp")}};
 
-        const auto frames = images | map([](const auto& image) { return &image; }) | toVector();
+        const auto frames =
+            images | std::views::transform([](const auto& image) { return &image; }) | std::ranges::to<std::vector>();
+
         const auto delayCentiseconds = 20;
+
         const auto actual = getGifBinary(frames, delayCentiseconds);
 
-        if (expected != actual)
-        {
-            writeBinaryFile("target/temporary/test_actual_animation.gif", actual);
-
-            FAIL("animation binary do not match -- check target/temporary/test_actual_animation.gif");
-        }
-        else
-        {
-            SUCCEED("animation binary match");
-        }
+        REQUIRE(checkGifImage(actual, "animation.gif"));
     }
 }

@@ -1,15 +1,36 @@
 #include "dansandu/canvas/bitmap.hpp"
-#include "catchorg/catch/catch.hpp"
+#include "dansandu/ballotin/exception.hpp"
 #include "dansandu/ballotin/string.hpp"
 #include "dansandu/canvas/color.hpp"
-#include "dansandu/canvas/common.test.hpp"
 #include "dansandu/canvas/image.hpp"
+#include "dansandu/radiance/radiance.hpp"
 
 using dansandu::ballotin::string::format;
 using dansandu::canvas::bitmap::readBitmapFile;
 using dansandu::canvas::bitmap::writeBitmapFile;
 using dansandu::canvas::color::Colors;
 using dansandu::canvas::image::Image;
+
+namespace
+{
+
+bool checkBitmap(const Image& actualImage, const std::string& fileName)
+{
+    const auto expectedImagePath = "resources/test/dansandu/canvas/expected_" + fileName;
+    const auto expectedImage = readBitmapFile(expectedImagePath);
+    if (actualImage != expectedImage)
+    {
+        const auto actualImagePath = "target/temporary/actual_" + fileName;
+        writeBitmapFile(actualImagePath, actualImage);
+
+        THROW(std::runtime_error, "actual image does not match expected image ", expectedImagePath, " -- check ",
+              actualImagePath, " for comparison");
+    }
+
+    return true;
+}
+
+}
 
 TEST_CASE("bitmap")
 {
@@ -23,7 +44,7 @@ TEST_CASE("bitmap")
         image(0, 2) = Colors::pink;
         image(1, 2) = Colors::darkGreen;
 
-        requireBitmapImage(image, "rgb.bmp");
+        REQUIRE(checkBitmap(image, "rgb.bmp"));
     }
 
     SECTION("chessboard")
@@ -39,7 +60,7 @@ TEST_CASE("bitmap")
             }
         }
 
-        requireBitmapImage(image, "chessboard.bmp");
+        REQUIRE(checkBitmap(image, "chessboard.bmp"));
     }
 
     SECTION("flower")

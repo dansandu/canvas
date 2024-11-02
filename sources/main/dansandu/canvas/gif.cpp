@@ -4,7 +4,6 @@
 #include "dansandu/ballotin/file_system.hpp"
 #include "dansandu/ballotin/logging.hpp"
 #include "dansandu/canvas/color.hpp"
-#include "dansandu/range/range.hpp"
 
 #include <algorithm>
 #include <vector>
@@ -15,8 +14,6 @@ using dansandu::ballotin::logging::LogDebug;
 using dansandu::canvas::color::Color;
 using dansandu::canvas::color::Colors;
 using dansandu::canvas::image::Image;
-
-using namespace dansandu::range::range;
 
 namespace dansandu::canvas::gif
 {
