@@ -2,18 +2,18 @@
 #include "dansandu/ballotin/binary.hpp"
 #include "dansandu/ballotin/exception.hpp"
 #include "dansandu/ballotin/file_system.hpp"
-#include "dansandu/ballotin/logging.hpp"
 #include "dansandu/canvas/color.hpp"
+#include "dansandu/journey/logging.hpp"
 
 #include <algorithm>
 #include <vector>
 
-using dansandu::ballotin::binary::pushBits;
+using dansandu::ballotin::binary::pushBitsLeastSignificant;
 using dansandu::ballotin::file_system::writeBinaryFile;
-using dansandu::ballotin::logging::LogDebug;
 using dansandu::canvas::color::Color;
 using dansandu::canvas::color::Colors;
 using dansandu::canvas::image::Image;
+using dansandu::journey::logging::LogDebug;
 
 namespace dansandu::canvas::gif
 {
@@ -50,11 +50,11 @@ std::pair<std::vector<uint8_t>, int> lzw(const std::vector<int>& input, const in
     auto index = 0;
 
     auto output = std::vector<uint8_t>{};
-    auto bitsCount = 0;
+    auto bitsCount = size_t{0};
     auto code = 0;
     auto codeSize = minimumCodeSize + 1;
 
-    pushBits(output, bitsCount, clearCode, codeSize);
+    pushBitsLeastSignificant(output, bitsCount, clearCode, codeSize);
 
     while (index < static_cast<int>(input.size()))
     {
@@ -72,7 +72,7 @@ std::pair<std::vector<uint8_t>, int> lzw(const std::vector<int>& input, const in
         }
         else
         {
-            pushBits(output, bitsCount, code, codeSize);
+            pushBitsLeastSignificant(output, bitsCount, code, codeSize);
 
             if ((1 << codeSize) <= clearCode + 2 + static_cast<int>(dictionary.size()))
             {
@@ -95,10 +95,10 @@ std::pair<std::vector<uint8_t>, int> lzw(const std::vector<int>& input, const in
 
     if (!sequence.empty())
     {
-        pushBits(output, bitsCount, code, codeSize);
+        pushBitsLeastSignificant(output, bitsCount, code, codeSize);
     }
 
-    pushBits(output, bitsCount, endCode, codeSize);
+    pushBitsLeastSignificant(output, bitsCount, endCode, codeSize);
 
     return {std::move(output), minimumCodeSize};
 }

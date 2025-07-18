@@ -1,6 +1,7 @@
 organization: dansandu
 artifact: canvas
 version: 1.0.0
+test_service_runner: dansandu-service_runner
 dependencies:
 - organization: dansandu
   artifact: math
@@ -10,5 +11,9 @@ dependencies:
   version: 1.+0.+0.SNAPSHOT
 - organization: dansandu
   artifact: radiance
+  version: 1.0.0.SNAPSHOT
+  scope: test
+- organization: dansandu
+  artifact: service_runner
   version: 1.0.0.SNAPSHOT
   scope: test
