@@ -30,8 +30,9 @@ TEST_CASE("image")
 
         SECTION("indexing outside bounds")
         {
-            REQUIRE_THROW(image(10, 20), std::out_of_range);
-            REQUIRE_THROW(image(15, 10), std::out_of_range);
+            REQUIRE_THROW(std::out_of_range, image(10, 20));
+
+            REQUIRE_THROW(std::out_of_range, image(15, 10));
         }
     }
 

@@ -142,10 +142,7 @@ TEST_CASE("gif")
     SECTION("small animation")
     {
         const auto images = std::vector<Color>{{Colors::red, Colors::green, Colors::blue}} |
-                            std::views::transform(
-                                [](const auto color) {
-                                    return Image{5, 5, color};
-                                }) |
+                            std::views::transform([](const auto color) { return Image{5, 5, color}; }) |
                             std::ranges::to<std::vector>();
 
         const auto frames =
