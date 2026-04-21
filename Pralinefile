@@ -1,7 +1,6 @@
 organization: dansandu
 artifact: canvas
 version: 1.0.0
-test_service_runner: dansandu-service_runner
 dependencies:
 - organization: dansandu
   artifact: math

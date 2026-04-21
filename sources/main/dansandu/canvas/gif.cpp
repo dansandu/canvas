@@ -13,7 +13,6 @@ using dansandu::ballotin::file_system::writeBinaryFile;
 using dansandu::canvas::color::Color;
 using dansandu::canvas::color::Colors;
 using dansandu::canvas::image::Image;
-using dansandu::journey::logging::LogDebug;
 
 namespace dansandu::canvas::gif
 {
@@ -67,7 +66,7 @@ std::pair<std::vector<uint8_t>, int> lzw(const std::vector<int>& input, const in
         }
         else if (auto entry = std::find(dictionary.cbegin(), dictionary.cend(), sequence); entry != dictionary.end())
         {
-            code = clearCode + 2 + (entry - dictionary.cbegin());
+            code = clearCode + 2 + static_cast<int>(entry - dictionary.cbegin());
             ++index;
         }
         else
@@ -317,7 +316,7 @@ static std::pair<std::vector<Color>, std::vector<int>> getImageColors(const Imag
         {
             const auto color = image(x, y);
             const auto position = std::find(colors.cbegin(), colors.cend(), color);
-            indexes.push_back(position - colors.cbegin());
+            indexes.push_back(static_cast<int>(position - colors.cbegin()));
             if (position == colors.cend())
             {
                 colors.push_back(color);
@@ -350,7 +349,7 @@ static std::pair<std::vector<Color>, std::vector<int>> getImageColors(const Imag
             const auto reducedColor = Color{red, green, blue};
 
             const auto position = std::find(reducedColors.cbegin(), reducedColors.cend(), reducedColor);
-            reducedIndexes.push_back(position - reducedColors.cbegin());
+            reducedIndexes.push_back(static_cast<int>(position - reducedColors.cbegin()));
             if (position == reducedColors.cend())
             {
                 reducedColors.push_back(reducedColor);
@@ -371,7 +370,7 @@ static std::pair<std::vector<Color>, std::vector<int>> getImageColors(const Imag
 
 std::vector<uint8_t> getGifBinary(const Image& image)
 {
-    LogDebug("generating gif image binary");
+    LOG_DEBUG("Generating GIF image binary");
 
     if (image.empty())
     {
@@ -402,7 +401,7 @@ std::vector<uint8_t> getGifBinary(const Image& image)
 
 std::vector<uint8_t> getGifBinary(const std::vector<const Image*>& frames, const int periodCentiseconds)
 {
-    LogDebug("generating gif animation binary with ", frames.size(), " frames and ", periodCentiseconds, " cs period");
+    LOG_DEBUG("Generating GIF animation binary with ", frames.size(), " frames and ", periodCentiseconds, " cs period");
 
     if (frames.empty())
     {
