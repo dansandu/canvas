@@ -1,8 +1,8 @@
 #include "dansandu/canvas/bitmap.hpp"
-#include "dansandu/ballotin/exception.hpp"
 #include "dansandu/ballotin/file_system.hpp"
 #include "dansandu/canvas/color.hpp"
 #include "dansandu/canvas/image.hpp"
+#include "dansandu/journey/exception.hpp"
 
 #include <cstdint>
 

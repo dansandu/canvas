@@ -1,8 +1,8 @@
 #include "dansandu/canvas/gif.hpp"
 #include "dansandu/ballotin/binary.hpp"
-#include "dansandu/ballotin/exception.hpp"
 #include "dansandu/ballotin/file_system.hpp"
 #include "dansandu/canvas/color.hpp"
+#include "dansandu/journey/exception.hpp"
 #include "dansandu/journey/logging.hpp"
 
 #include <algorithm>

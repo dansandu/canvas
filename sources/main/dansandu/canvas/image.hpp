@@ -1,7 +1,7 @@
 #pragma once
 
-#include "dansandu/ballotin/exception.hpp"
 #include "dansandu/canvas/color.hpp"
+#include "dansandu/journey/exception.hpp"
 #include "dansandu/math/matrix.hpp"
 
 #include <algorithm>
