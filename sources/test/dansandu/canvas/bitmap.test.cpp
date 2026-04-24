@@ -1,8 +1,8 @@
 #include "dansandu/canvas/bitmap.hpp"
-#include "dansandu/ballotin/exception.hpp"
 #include "dansandu/ballotin/string.hpp"
 #include "dansandu/canvas/color.hpp"
 #include "dansandu/canvas/image.hpp"
+#include "dansandu/journey/exception.hpp"
 #include "dansandu/radiance/radiance.hpp"
 
 using dansandu::ballotin::string::format;
