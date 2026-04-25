@@ -11,7 +11,6 @@
 using dansandu::ballotin::binary::pushBitsLeastSignificant;
 using dansandu::ballotin::file_system::writeBinaryFile;
 using dansandu::canvas::color::Color;
-using dansandu::canvas::color::Colors;
 using dansandu::canvas::image::Image;
 
 namespace dansandu::canvas::gif
@@ -254,9 +253,9 @@ static void writeColorTable(std::vector<uint8_t>& bytes, const std::vector<Color
 {
     for (const auto color : colors)
     {
-        bytes.push_back(color.red());
-        bytes.push_back(color.green());
-        bytes.push_back(color.blue());
+        bytes.push_back(color.getRedChannel());
+        bytes.push_back(color.getGreenChannel());
+        bytes.push_back(color.getBlueChannel());
     }
 
     const auto colorsSize = static_cast<int>(colors.size());
@@ -342,10 +341,14 @@ static std::pair<std::vector<Color>, std::vector<int>> getImageColors(const Imag
         for (const auto index : indexes)
         {
             const auto color = colors[index];
-            const auto red = static_cast<Color::value_type>(std::round(color.red() / redSampling) * redSampling);
+
+            const auto red = static_cast<uint8_t>(std::round(color.getRedChannel() / redSampling) * redSampling);
+
             const auto green =
-                static_cast<Color::value_type>(std::round(color.green() / greenSampling) * greenSampling);
-            const auto blue = static_cast<Color::value_type>(std::round(color.blue() / blueSampling) * blueSampling);
+                static_cast<uint8_t>(std::round(color.getGreenChannel() / greenSampling) * greenSampling);
+
+            const auto blue = static_cast<uint8_t>(std::round(color.getBlueChannel() / blueSampling) * blueSampling);
+
             const auto reducedColor = Color{red, green, blue};
 
             const auto position = std::find(reducedColors.cbegin(), reducedColors.cend(), reducedColor);
@@ -362,7 +365,7 @@ static std::pair<std::vector<Color>, std::vector<int>> getImageColors(const Imag
 
     while (colors.size() < minimumColorsPerTable)
     {
-        colors.push_back(Colors::black);
+        colors.push_back(Color::black);
     }
 
     return {std::move(colors), std::move(indexes)};

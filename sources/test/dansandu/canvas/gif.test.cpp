@@ -13,7 +13,6 @@ using dansandu::ballotin::file_system::readBinaryFile;
 using dansandu::ballotin::file_system::writeBinaryFile;
 using dansandu::canvas::bitmap::readBitmapFile;
 using dansandu::canvas::color::Color;
-using dansandu::canvas::color::Colors;
 using dansandu::canvas::gif::getGifBinary;
 using dansandu::canvas::gif::lzw;
 using dansandu::canvas::image::Image;
@@ -120,11 +119,11 @@ TEST_CASE("gif")
     {
         // clang-format off
         const auto image = Image{3, 5, {
-            Colors::red,   Colors::black, Colors::black,
-            Colors::black, Colors::green, Colors::black,
-            Colors::black, Colors::black, Colors::blue,
-            Colors::black, Colors::black, Colors::black,
-            Colors::black, Colors::black, Colors::black,
+            Color::red,   Color::black, Color::black,
+            Color::black, Color::green, Color::black,
+            Color::black, Color::black, Color::blue,
+            Color::black, Color::black, Color::black,
+            Color::black, Color::black, Color::black,
         }};
         // clang-format on
 
@@ -141,7 +140,7 @@ TEST_CASE("gif")
 
     SECTION("small animation")
     {
-        const auto images = std::vector<Color>{{Colors::red, Colors::green, Colors::blue}} |
+        const auto images = std::vector<Color>{{Color::red, Color::green, Color::blue}} |
                             std::views::transform([](const auto color) { return Image{5, 5, color}; }) |
                             std::ranges::to<std::vector>();
 
@@ -170,12 +169,12 @@ TEST_CASE("gif")
     SECTION("rgb")
     {
         auto image = Image{2, 3};
-        image(0, 0) = Colors::red;
-        image(1, 0) = Colors::green;
-        image(0, 1) = Colors::blue;
-        image(1, 1) = Colors::magenta;
-        image(0, 2) = Colors::pink;
-        image(1, 2) = Colors::darkGreen;
+        image(0, 0) = Color::red;
+        image(1, 0) = Color::green;
+        image(0, 1) = Color::blue;
+        image(1, 1) = Color::magenta;
+        image(0, 2) = Color::pink;
+        image(1, 2) = Color::darkGreen;
 
         const auto actual = getGifBinary(image);
 

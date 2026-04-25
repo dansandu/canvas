@@ -7,1003 +7,997 @@
 namespace dansandu::canvas::color
 {
 
-enum class Colors : uint32_t
-{
-    absoluteZero = 0x0048BAFFU,
-    acidGreen = 0xB0BF1AFFU,
-    aero = 0x7CB9E8FFU,
-    aeroBlue = 0xC0E8D5FFU,
-    africanViolet = 0xB284BEFFU,
-    alabaster = 0xEDEAE0FFU,
-    aliceBlue = 0xF0F8FFFFU,
-    alloyOrange = 0xC46210FFU,
-    almond = 0xEFDECDFFU,
-    amaranth = 0xE52B50FFU,
-    amaranthPink = 0xF19CBBFFU,
-    amaranthPurple = 0xAB274FFFU,
-    amaranthRed = 0xD3212DFFU,
-    amazon = 0x3B7A57FFU,
-    amber = 0xFFBF00FFU,
-    amethyst = 0x9966CCFFU,
-    androidGreen = 0x3DDC84FFU,
-    antiqueBrass = 0xCD9575FFU,
-    antiqueBronze = 0x665D1EFFU,
-    antiqueFuchsia = 0x915C83FFU,
-    antiqueRuby = 0x841B2DFFU,
-    antiqueWhite = 0xFAEBD7FFU,
-    ao = 0x008000FFU,
-    appleGreen = 0x8DB600FFU,
-    apricot = 0xFBCEB1FFU,
-    aqua = 0x00FFFFFFU,
-    aquamarine = 0x7FFFD4FFU,
-    arcticLime = 0xD0FF14FFU,
-    armyGreen = 0x4B5320FFU,
-    artichoke = 0x8F9779FFU,
-    arylideYellow = 0xE9D66BFFU,
-    ashGray = 0xB2BEB5FFU,
-    asparagus = 0x87A96BFFU,
-    atomicTangerine = 0xFF9966FFU,
-    auburn = 0xA52A2AFFU,
-    aureolin = 0xFDEE00FFU,
-    avocado = 0x568203FFU,
-    azure = 0x007FFFFFU,
-    babyBlue = 0x89CFF0FFU,
-    babyBlueEyes = 0xA1CAF1FFU,
-    babyPink = 0xF4C2C2FFU,
-    babyPowder = 0xFEFEFAFFU,
-    bakerMillerPink = 0xFF91AFFFU,
-    bananaMania = 0xFAE7B5FFU,
-    barbiePink = 0xDA1884FFU,
-    barnRed = 0x7C0A02FFU,
-    battleshipGrey = 0x848482FFU,
-    beauBlue = 0xBCD4E6FFU,
-    beaver = 0x9F8170FFU,
-    beige = 0xF5F5DCFFU,
-    bDazzledBlue = 0x2E5894FFU,
-    bigDipORuby = 0x9C2542FFU,
-    bisque = 0xFFE4C4FFU,
-    bistre = 0x3D2B1FFFU,
-    bistreBrown = 0x967117FFU,
-    bitterLemon = 0xCAE00DFFU,
-    bitterLime = 0xBFFF00FFU,
-    bittersweet = 0xFE6F5EFFU,
-    bittersweetShimmer = 0xBF4F51FFU,
-    black = 0x000000FFU,
-    blackBean = 0x3D0C02FFU,
-    blackChocolate = 0x1B1811FFU,
-    blackCoffee = 0x3B2F2FFFU,
-    blackCoral = 0x54626FFFU,
-    blackOlive = 0x3B3C36FFU,
-    blackShadows = 0xBFAFB2FFU,
-    blanchedAlmond = 0xFFEBCDFFU,
-    blastOffBronze = 0xA57164FFU,
-    bleuDeFrance = 0x318CE7FFU,
-    blizzardBlue = 0xACE5EEFFU,
-    blond = 0xFAF0BEFFU,
-    bloodRed = 0x660000FFU,
-    blue = 0x0000FFFFU,
-    blueCrayola = 0x1F75FEFFU,
-    blueMunsell = 0x0093AFFFU,
-    bluePigment = 0x333399FFU,
-    blueBell = 0xA2A2D0FFU,
-    blueGray = 0x6699CCFFU,
-    blueGreen = 0x0D98BAFFU,
-    blueJeans = 0x5DADECFFU,
-    blueSapphire = 0x126180FFU,
-    blueViolet = 0x8A2BE2FFU,
-    blueVioletCrayola = 0x7366BDFFU,
-    blueYonder = 0x5072A7FFU,
-    bluetiful = 0x3C69E7FFU,
-    blush = 0xDE5D83FFU,
-    bole = 0x79443BFFU,
-    bone = 0xE3DAC9FFU,
-    bottleGreen = 0x006A4EFFU,
-    brandy = 0x87413FFFU,
-    brickRed = 0xCB4154FFU,
-    brightGreen = 0x66FF00FFU,
-    brightLilac = 0xD891EFFFU,
-    brightMaroon = 0xC32148FFU,
-    brightNavyBlue = 0x1974D2FFU,
-    brightYellowCrayola = 0xFFAA1DFFU,
-    brilliantRose = 0xFF55A3FFU,
-    brinkPink = 0xFB607FFFU,
-    britishRacingGreen = 0x004225FFU,
-    bronze = 0xCD7F32FFU,
-    brown = 0x88540BFFU,
-    brownSugar = 0xAF6E4DFFU,
-    brunswickGreen = 0x1B4D3EFFU,
-    budGreen = 0x7BB661FFU,
-    buff = 0xFFC680FFU,
-    burgundy = 0x800020FFU,
-    burlywood = 0xDEB887FFU,
-    burnishedBrown = 0xA17A74FFU,
-    burntOrange = 0xCC5500FFU,
-    burntSienna = 0xE97451FFU,
-    burntUmber = 0x8A3324FFU,
-    byzantine = 0xBD33A4FFU,
-    byzantium = 0x702963FFU,
-    cadet = 0x536872FFU,
-    cadetBlue = 0x5F9EA0FFU,
-    cadetBlueCrayola = 0xA9B2C3FFU,
-    cadetGrey = 0x91A3B0FFU,
-    cadmiumGreen = 0x006B3CFFU,
-    cadmiumOrange = 0xED872DFFU,
-    cadmiumRed = 0xE30022FFU,
-    cadmiumYellow = 0xFFF600FFU,
-    cafeAuLait = 0xA67B5BFFU,
-    cafeNoir = 0x4B3621FFU,
-    cambridgeBlue = 0xA3C1ADFFU,
-    camel = 0xC19A6BFFU,
-    cameoPink = 0xEFBBCCFFU,
-    canary = 0xFFFF99FFU,
-    canaryYellow = 0xFFEF00FFU,
-    candyAppleRed = 0xFF0800FFU,
-    candyPink = 0xE4717AFFU,
-    capri = 0x00BFFFFFU,
-    caputMortuum = 0x592720FFU,
-    cardinal = 0xC41E3AFFU,
-    caribbeanGreen = 0x00CC99FFU,
-    carmine = 0x960018FFU,
-    carnationPink = 0xFFA6C9FFU,
-    carnelian = 0xB31B1BFFU,
-    carolinaBlue = 0x56A0D3FFU,
-    carrotOrange = 0xED9121FFU,
-    castletonGreen = 0x00563FFFU,
-    catawba = 0x703642FFU,
-    cedarChest = 0xC95A49FFU,
-    celadon = 0xACE1AFFFU,
-    celadonBlue = 0x007BA7FFU,
-    celadonGreen = 0x2F847CFFU,
-    celeste = 0xB2FFFFFFU,
-    celticBlue = 0x246BCEFFU,
-    cerise = 0xDE3163FFU,
-    cerulean = 0x007BA7FFU,
-    ceruleanBlue = 0x2A52BEFFU,
-    ceruleanFrost = 0x6D9BC3FFU,
-    ceruleanCrayola = 0x1DACD6FFU,
-    champagne = 0xF7E7CEFFU,
-    champagnePink = 0xF1DDCFFFU,
-    charcoal = 0x36454FFFU,
-    charlestonGreen = 0x232B2BFFU,
-    charmPink = 0xE68FACFFU,
-    chartreuseTraditional = 0xDFFF00FFU,
-    chartreuse = 0x7FFF00FFU,
-    cherryBlossomPink = 0xFFB7C5FFU,
-    chestnut = 0x954535FFU,
-    chiliRed = 0xE23D28FFU,
-    chocolateTraditional = 0x7B3F00FFU,
-    chocolate = 0xD2691EFFU,
-    chocolateCosmos = 0x58111AFFU,
-    chromeYellow = 0xFFA700FFU,
-    cinereous = 0x98817BFFU,
-    cinnabar = 0xE34234FFU,
-    cinnamonSatin = 0xCD607EFFU,
-    citrine = 0xE4D00AFFU,
-    citron = 0x9FA91FFFU,
-    claret = 0x7F1734FFU,
-    cobaltBlue = 0x0047ABFFU,
-    cocoaBrown = 0xD2691EFFU,
-    coconut = 0x965A3EFFU,
-    coffee = 0x6F4E37FFU,
-    columbiaBlue = 0xB9D9EBFFU,
-    congoPink = 0xF88379FFU,
-    coolGrey = 0x8C92ACFFU,
-    copper = 0xB87333FFU,
-    copperCrayola = 0xDA8A67FFU,
-    copperPenny = 0xAD6F69FFU,
-    copperRed = 0xCB6D51FFU,
-    copperRose = 0x996666FFU,
-    coquelicot = 0xFF3800FFU,
-    coral = 0xFF7F50FFU,
-    coralPink = 0xF88379FFU,
-    cordovan = 0x893F45FFU,
-    corn = 0xFBEC5DFFU,
-    cornellRed = 0xB31B1BFFU,
-    cornflowerBlue = 0x6495EDFFU,
-    cornsilk = 0xFFF8DCFFU,
-    cosmicCobalt = 0x2E2D88FFU,
-    cosmicLatte = 0xFFF8E7FFU,
-    coyoteBrown = 0x81613CFFU,
-    cottonCandy = 0xFFBCD9FFU,
-    cream = 0xFFFDD0FFU,
-    crimson = 0xDC143CFFU,
-    crystal = 0xA7D8DEFFU,
-    cultured = 0xF5F5F5FFU,
-    cyan = 0x00FFFFFFU,
-    cyanProcess = 0x00B7EBFFU,
-    cyberGrape = 0x58427CFFU,
-    cyberYellow = 0xFFD300FFU,
-    cyclamen = 0xF56FA1FFU,
-    darkBlueGray = 0x666699FFU,
-    darkBrown = 0x654321FFU,
-    darkByzantium = 0x5D3954FFU,
-    darkCornflowerBlue = 0x26428BFFU,
-    darkCyan = 0x008B8BFFU,
-    darkElectricBlue = 0x536878FFU,
-    darkGoldenrod = 0xB8860BFFU,
-    darkGreen = 0x013220FFU,
-    darkJungleGreen = 0x1A2421FFU,
-    darkKhaki = 0xBDB76BFFU,
-    darkLava = 0x483C32FFU,
-    darkLiver = 0x534B4FFFU,
-    darkMagenta = 0x8B008BFFU,
-    darkMossGreen = 0x4A5D23FFU,
-    darkOliveGreen = 0x556B2FFFU,
-    darkOrange = 0xFF8C00FFU,
-    darkOrchid = 0x9932CCFFU,
-    darkPastelGreen = 0x03C03CFFU,
-    darkPurple = 0x301934FFU,
-    darkRed = 0x8B0000FFU,
-    darkSalmon = 0xE9967AFFU,
-    darkSeaGreen = 0x8FBC8FFFU,
-    darkSienna = 0x3C1414FFU,
-    darkSkyBlue = 0x8CBED6FFU,
-    darkSlateBlue = 0x483D8BFFU,
-    darkSlateGray = 0x2F4F4FFFU,
-    darkSpringGreen = 0x177245FFU,
-    darkTurquoise = 0x00CED1FFU,
-    darkViolet = 0x9400D3FFU,
-    dartmouthGreen = 0x00703CFFU,
-    davysGrey = 0x555555FFU,
-    deepCerise = 0xDA3287FFU,
-    deepChampagne = 0xFAD6A5FFU,
-    deepChestnut = 0xB94E48FFU,
-    deepJungleGreen = 0x004B49FFU,
-    deepPink = 0xFF1493FFU,
-    deepSaffron = 0xFF9933FFU,
-    deepSkyBlue = 0x00BFFFFFU,
-    deepSpaceSparkle = 0x4A646CFFU,
-    deepTaupe = 0x7E5E60FFU,
-    denim = 0x1560BDFFU,
-    denimBlue = 0x2243B6FFU,
-    desert = 0xC19A6BFFU,
-    desertSand = 0xEDC9AFFFU,
-    dimGray = 0x696969FFU,
-    dodgerBlue = 0x1E90FFFFU,
-    dogwoodRose = 0xD71868FFU,
-    drab = 0x967117FFU,
-    dukeBlue = 0x00009CFFU,
-    dutchWhite = 0xEFDFBBFFU,
-    earthYellow = 0xE1A95FFFU,
-    ebony = 0x555D50FFU,
-    ecru = 0xC2B280FFU,
-    eerieBlack = 0x1B1B1BFFU,
-    eggplant = 0x614051FFU,
-    eggshell = 0xF0EAD6FFU,
-    egyptianBlue = 0x1034A6FFU,
-    eigengrau = 0x16161DFFU,
-    electricBlue = 0x7DF9FFFFU,
-    electricGreen = 0x00FF00FFU,
-    electricIndigo = 0x6F00FFFFU,
-    electricLime = 0xCCFF00FFU,
-    electricPurple = 0xBF00FFFFU,
-    electricViolet = 0x8F00FFFFU,
-    emerald = 0x50C878FFU,
-    eminence = 0x6C3082FFU,
-    englishGreen = 0x1B4D3EFFU,
-    englishLavender = 0xB48395FFU,
-    englishRed = 0xAB4B52FFU,
-    englishVermillion = 0xCC474BFFU,
-    englishViolet = 0x563C5CFFU,
-    erin = 0x00FF40FFU,
-    etonBlue = 0x96C8A2FFU,
-    fallow = 0xC19A6BFFU,
-    faluRed = 0x801818FFU,
-    fandango = 0xB53389FFU,
-    fandangoPink = 0xDE5285FFU,
-    fashionFuchsia = 0xF400A1FFU,
-    fawn = 0xE5AA70FFU,
-    feldgrau = 0x4D5D53FFU,
-    fernGreen = 0x4F7942FFU,
-    fieldDrab = 0x6C541EFFU,
-    fieryRose = 0xFF5470FFU,
-    firebrick = 0xB22222FFU,
-    fireEngineRed = 0xCE2029FFU,
-    fireOpal = 0xE95C4BFFU,
-    flame = 0xE25822FFU,
-    flax = 0xEEDC82FFU,
-    flirt = 0xA2006DFFU,
-    floralWhite = 0xFFFAF0FFU,
-    fluorescentBlue = 0x15F4EEFFU,
-    forestGreenCrayola = 0x5FA777FFU,
-    forestGreenTraditional = 0x014421FFU,
-    forestGreen = 0x228B22FFU,
-    frenchBeige = 0xA67B5BFFU,
-    frenchBistre = 0x856D4DFFU,
-    frenchBlue = 0x0072BBFFU,
-    frenchFuchsia = 0xFD3F92FFU,
-    frenchLilac = 0x86608EFFU,
-    frenchLime = 0x9EFD38FFU,
-    frenchMauve = 0xD473D4FFU,
-    frenchPink = 0xFD6C9EFFU,
-    frenchRaspberry = 0xC72C48FFU,
-    frenchRose = 0xF64A8AFFU,
-    frenchSkyBlue = 0x77B5FEFFU,
-    frenchViolet = 0x8806CEFFU,
-    frostbite = 0xE936A7FFU,
-    fuchsia = 0xFF00FFFFU,
-    fuchsiaCrayola = 0xC154C1FFU,
-    fuchsiaPurple = 0xCC397BFFU,
-    fuchsiaRose = 0xC74375FFU,
-    fulvous = 0xE48400FFU,
-    fuzzyWuzzy = 0x87421FFFU,
-    gainsboro = 0xDCDCDCFFU,
-    gamboge = 0xE49B0FFFU,
-    genericViridian = 0x007F66FFU,
-    ghostWhite = 0xF8F8FFFFU,
-    glaucous = 0x6082B6FFU,
-    glossyGrape = 0xAB92B3FFU,
-    gold = 0xA57C00FFU,
-    goldMetallic = 0xD4AF37FFU,
-    goldGolden = 0xFFD700FFU,
-    goldCrayola = 0xE6BE8AFFU,
-    goldFusion = 0x85754EFFU,
-    goldenBrown = 0x996515FFU,
-    goldenPoppy = 0xFCC200FFU,
-    goldenYellow = 0xFFDF00FFU,
-    goldenrod = 0xDAA520FFU,
-    gothamGreen = 0x00573FFFU,
-    graniteGray = 0x676767FFU,
-    grannySmithApple = 0xA8E4A0FFU,
-    darkGray = 0xBEBEBEFFU,
-    gray = 0x808080FFU,
-    green = 0x00FF00FFU,
-    greenWeb = 0x008000FFU,
-    greenCrayola = 0x1CAC78FFU,
-    greenMunsell = 0x00A877FFU,
-    greenPigment = 0x00A550FFU,
-    greenBlue = 0x1164B4FFU,
-    greenBlueCrayola = 0x2887C8FFU,
-    greenCyan = 0x009966FFU,
-    greenLizard = 0xA7F432FFU,
-    greenSheen = 0x6EAEA1FFU,
-    greenYellow = 0xADFF2FFFU,
-    greenYellowCrayola = 0xF0E891FFU,
-    grullo = 0xA99A86FFU,
-    gunmetal = 0x2A3439FFU,
-    hanBlue = 0x446CCFFFU,
-    hanPurple = 0x5218FAFFU,
-    hansaYellow = 0xE9D66BFFU,
-    harlequin = 0x3FFF00FFU,
-    harvestGold = 0xDA9100FFU,
-    heatWave = 0xFF7A00FFU,
-    heliotrope = 0xDF73FFFFU,
-    heliotropeGray = 0xAA98A9FFU,
-    hollywoodCerise = 0xF400A1FFU,
-    honeydew = 0xF0FFF0FFU,
-    honoluluBlue = 0x006DB0FFU,
-    hotMagenta = 0xFF1DCEFFU,
-    hotPink = 0xFF69B4FFU,
-    hunterGreen = 0x355E3BFFU,
-    iceberg = 0x71A6D2FFU,
-    icterine = 0xFCF75EFFU,
-    illuminatingEmerald = 0x319177FFU,
-    imperialRed = 0xED2939FFU,
-    inchworm = 0xB2EC5DFFU,
-    independence = 0x4C516DFFU,
-    indiaGreen = 0x138808FFU,
-    indianRed = 0xCD5C5CFFU,
-    indianYellow = 0xE3A857FFU,
-    indigo = 0x4B0082FFU,
-    indigoDye = 0x00416AFFU,
-    infrared = 0xFF496CFFU,
-    internationalKleinBlue = 0x130A8FFFU,
-    internationalOrangeAerospace = 0xFF4F00FFU,
-    internationalOrangeEngineering = 0xBA160CFFU,
-    internationalOrangeGoldenGateBridge = 0xC0362CFFU,
-    iris = 0x5A4FCFFFU,
-    irresistible = 0xB3446CFFU,
-    isabelline = 0xF4F0ECFFU,
-    italianSkyBlue = 0xB2FFFFFFU,
-    ivory = 0xFFFFF0FFU,
-    jade = 0x00A86BFFU,
-    japaneseCarmine = 0x9D2933FFU,
-    japaneseViolet = 0x5B3256FFU,
-    jasmine = 0xF8DE7EFFU,
-    jazzberryJam = 0xA50B5EFFU,
-    jet = 0x343434FFU,
-    jonquil = 0xF4CA16FFU,
-    juneBud = 0xBDDA57FFU,
-    jungleGreen = 0x29AB87FFU,
-    kellyGreen = 0x4CBB17FFU,
-    keppel = 0x3AB09EFFU,
-    keyLime = 0xE8F48CFFU,
-    khaki = 0xC3B091FFU,
-    lightKhaki = 0xF0E68CFFU,
-    kobe = 0x882D17FFU,
-    kobi = 0xE79FC4FFU,
-    kobicha = 0x6B4423FFU,
-    kombuGreen = 0x354230FFU,
-    languidLavender = 0xD6CADDFFU,
-    lapisLazuli = 0x26619CFFU,
-    laserLemon = 0xFFFF66FFU,
-    laurelGreen = 0xA9BA9DFFU,
-    lava = 0xCF1020FFU,
-    lavenderFloral = 0xB57EDCFFU,
-    lavender = 0xE6E6FAFFU,
-    lavenderBlue = 0xCCCCFFFFU,
-    lavenderBlush = 0xFFF0F5FFU,
-    lavenderGray = 0xC4C3D0FFU,
-    lawnGreen = 0x7CFC00FFU,
-    lemon = 0xFFF700FFU,
-    lemonChiffon = 0xFFFACDFFU,
-    lemonCurry = 0xCCA01DFFU,
-    lemonGlacier = 0xFDFF00FFU,
-    lemonMeringue = 0xF6EABEFFU,
-    lemonYellow = 0xFFF44FFFU,
-    lemonYellowCrayola = 0xFFFF9FFFU,
-    liberty = 0x545AA7FFU,
-    lightBlue = 0xADD8E6FFU,
-    lightCoral = 0xF08080FFU,
-    lightCornflowerBlue = 0x93CCEAFFU,
-    lightCyan = 0xE0FFFFFFU,
-    lightFrenchBeige = 0xC8AD7FFFU,
-    lightGoldenrodYellow = 0xFAFAD2FFU,
-    lightGray = 0xD3D3D3FFU,
-    lightGreen = 0x90EE90FFU,
-    lightOrange = 0xFED8B1FFU,
-    lightPeriwinkle = 0xC5CBE1FFU,
-    lightPink = 0xFFB6C1FFU,
-    lightSalmon = 0xFFA07AFFU,
-    lightSeaGreen = 0x20B2AAFFU,
-    lightSkyBlue = 0x87CEFAFFU,
-    lightSlateGray = 0x778899FFU,
-    lightSteelBlue = 0xB0C4DEFFU,
-    lightYellow = 0xFFFFE0FFU,
-    lilac = 0xC8A2C8FFU,
-    lilacLuster = 0xAE98AAFFU,
-    lightLime = 0xBFFF00FFU,
-    lime = 0x00FF00FFU,
-    limeGreen = 0x32CD32FFU,
-    lincolnGreen = 0x195905FFU,
-    linen = 0xFAF0E6FFU,
-    lion = 0xC19A6BFFU,
-    liseranPurple = 0xDE6FA1FFU,
-    littleBoyBlue = 0x6CA0DCFFU,
-    liver = 0x674C47FFU,
-    liverChestnut = 0x987456FFU,
-    livid = 0x6699CCFFU,
-    macaroniAndCheese = 0xFFBD88FFU,
-    madderLake = 0xCC3336FFU,
-    magenta = 0xFF00FFFFU,
-    magentaCrayola = 0xF653A6FFU,
-    magentaDye = 0xCA1F7BFFU,
-    magentaProcess = 0xFF0090FFU,
-    magentaHaze = 0x9F4576FFU,
-    magicMint = 0xAAF0D1FFU,
-    magnolia = 0xF2E8D7FFU,
-    mahogany = 0xC04000FFU,
-    maize = 0xFBEC5DFFU,
-    maizeCrayola = 0xF2C649FFU,
-    majorelleBlue = 0x6050DCFFU,
-    malachite = 0x0BDA51FFU,
-    manatee = 0x979AAAFFU,
-    mandarin = 0xF37A48FFU,
-    mango = 0xFDBE02FFU,
-    mangoTango = 0xFF8243FFU,
-    mantis = 0x74C365FFU,
-    mardiGras = 0x880085FFU,
-    marigold = 0xEAA221FFU,
-    maroonCrayola = 0xC32148FFU,
-    maroonWeb = 0x800000FFU,
-    maroon = 0x800000FFU,
-    mauve = 0xE0B0FFFFU,
-    mauveTaupe = 0x915F6DFFU,
-    mauvelous = 0xEF98AAFFU,
-    maximumBlue = 0x47ABCCFFU,
-    maximumBlueGreen = 0x30BFBFFFU,
-    maximumBluePurple = 0xACACE6FFU,
-    maximumGreen = 0x5E8C31FFU,
-    maximumGreenYellow = 0xD9E650FFU,
-    maximumPurple = 0x733380FFU,
-    maximumRed = 0xD92121FFU,
-    maximumRedPurple = 0xA63A79FFU,
-    maximumYellow = 0xFAFA37FFU,
-    maximumYellowRed = 0xF2BA49FFU,
-    mayGreen = 0x4C9141FFU,
-    mayaBlue = 0x73C2FBFFU,
-    mediumAquamarine = 0x66DDAAFFU,
-    mediumBlue = 0x0000CDFFU,
-    mediumCandyAppleRed = 0xE2062CFFU,
-    mediumCarmine = 0xAF4035FFU,
-    mediumChampagne = 0xF3E5ABFFU,
-    mediumOrchid = 0xBA55D3FFU,
-    mediumPurple = 0x9370DBFFU,
-    mediumSeaGreen = 0x3CB371FFU,
-    mediumSlateBlue = 0x7B68EEFFU,
-    mediumSpringGreen = 0x00FA9AFFU,
-    mediumTurquoise = 0x48D1CCFFU,
-    mediumVioletRed = 0xC71585FFU,
-    mellowApricot = 0xF8B878FFU,
-    mellowYellow = 0xF8DE7EFFU,
-    melon = 0xFEBAADFFU,
-    metallicGold = 0xD3AF37FFU,
-    metallicSeaweed = 0x0A7E8CFFU,
-    metallicSunburst = 0x9C7C38FFU,
-    mexicanPink = 0xE4007CFFU,
-    middleBlue = 0x7ED4E6FFU,
-    middleBlueGreen = 0x8DD9CCFFU,
-    middleBluePurple = 0x8B72BEFFU,
-    middleGrey = 0x8B8680FFU,
-    middleGreen = 0x4D8C57FFU,
-    middleGreenYellow = 0xACBF60FFU,
-    middlePurple = 0xD982B5FFU,
-    middleRed = 0xE58E73FFU,
-    middleRedPurple = 0xA55353FFU,
-    middleYellow = 0xFFEB00FFU,
-    middleYellowRed = 0xECB176FFU,
-    midnight = 0x702670FFU,
-    midnightBlue = 0x191970FFU,
-    midnightGreen = 0x004953FFU,
-    mikadoYellow = 0xFFC40CFFU,
-    mimiPink = 0xFFDAE9FFU,
-    mindaro = 0xE3F988FFU,
-    ming = 0x36747DFFU,
-    minionYellow = 0xF5E050FFU,
-    mint = 0x3EB489FFU,
-    mintCream = 0xF5FFFAFFU,
-    mintGreen = 0x98FF98FFU,
-    mistyMoss = 0xBBB477FFU,
-    mistyRose = 0xFFE4E1FFU,
-    modeBeige = 0x967117FFU,
-    morningBlue = 0x8DA399FFU,
-    mossGreen = 0x8A9A5BFFU,
-    mountainMeadow = 0x30BA8FFFU,
-    mountbattenPink = 0x997A8DFFU,
-    mulberry = 0xC54B8CFFU,
-    mulberryCrayola = 0xC8509BFFU,
-    mustard = 0xFFDB58FFU,
-    myrtleGreen = 0x317873FFU,
-    mystic = 0xD65282FFU,
-    mysticMaroon = 0xAD4379FFU,
-    nadeshikoPink = 0xF6ADC6FFU,
-    naplesYellow = 0xFADA5EFFU,
-    navajoWhite = 0xFFDEADFFU,
-    navyBlue = 0x000080FFU,
-    navyBlueCrayola = 0x1974D2FFU,
-    neonBlue = 0x4666FFFFU,
-    neonCarrot = 0xFFA343FFU,
-    neonGreen = 0x39FF14FFU,
-    neonFuchsia = 0xFE4164FFU,
-    newYorkPink = 0xD7837FFFU,
-    nickel = 0x727472FFU,
-    nonPhotoBlue = 0xA4DDEDFFU,
-    nyanza = 0xE9FFDBFFU,
-    oceanBlue = 0x4F42B5FFU,
-    oceanGreen = 0x48BF91FFU,
-    ochre = 0xCC7722FFU,
-    oldBurgundy = 0x43302EFFU,
-    oldGold = 0xCFB53BFFU,
-    oldLace = 0xFDF5E6FFU,
-    oldLavender = 0x796878FFU,
-    oldMauve = 0x673147FFU,
-    oldRose = 0xC08081FFU,
-    oldSilver = 0x848482FFU,
-    olive = 0x808000FFU,
-    oliveDrab = 0x6B8E23FFU,
-    oliveGreen = 0xB5B35CFFU,
-    olivine = 0x9AB973FFU,
-    onyx = 0x353839FFU,
-    opal = 0xA8C3BCFFU,
-    operaMauve = 0xB784A7FFU,
-    orange = 0xFF7F00FFU,
-    orangeCrayola = 0xFF7538FFU,
-    orangePeel = 0xFF9F00FFU,
-    orangeRed = 0xFF681FFFU,
-    orangeRedCrayola = 0xFF5349FFU,
-    orangeSoda = 0xFA5B3DFFU,
-    orangeYellow = 0xF5BD1FFFU,
-    orangeYellowCrayola = 0xF8D568FFU,
-    orchid = 0xDA70D6FFU,
-    orchidPink = 0xF2BDCDFFU,
-    orchidCrayola = 0xE29CD2FFU,
-    outerSpaceCrayola = 0x2D383AFFU,
-    outrageousOrange = 0xFF6E4AFFU,
-    oxblood = 0x4A0000FFU,
-    oxfordBlue = 0x002147FFU,
-    pacificBlue = 0x1CA9C9FFU,
-    pakistanGreen = 0x006600FFU,
-    palatinatePurple = 0x682860FFU,
-    paleAqua = 0xBCD4E6FFU,
-    paleCerulean = 0x9BC4E2FFU,
-    paleDogwood = 0xED7A9BFFU,
-    palePink = 0xFADADDFFU,
-    paleSilver = 0xC9C0BBFFU,
-    paleSpringBud = 0xECEBBDFFU,
-    pansyPurple = 0x78184AFFU,
-    paoloVeroneseGreen = 0x009B7DFFU,
-    papayaWhip = 0xFFEFD5FFU,
-    paradisePink = 0xE63E62FFU,
-    parchment = 0xF1E9D2FFU,
-    parisGreen = 0x50C878FFU,
-    pastelPink = 0xDEA5A4FFU,
-    patriarch = 0x800080FFU,
-    paynesGrey = 0x536878FFU,
-    peach = 0xFFE5B4FFU,
-    peachCrayola = 0xFFCBA4FFU,
-    peachPuff = 0xFFDAB9FFU,
-    pear = 0xD1E231FFU,
-    pearlyPurple = 0xB768A2FFU,
-    periwinkle = 0xCCCCFFFFU,
-    periwinkleCrayola = 0xC3CDE6FFU,
-    permanentGeraniumLake = 0xE12C2CFFU,
-    persianBlue = 0x1C39BBFFU,
-    persianGreen = 0x00A693FFU,
-    persianIndigo = 0x32127AFFU,
-    persianOrange = 0xD99058FFU,
-    persianPink = 0xF77FBEFFU,
-    persianPlum = 0x701C1CFFU,
-    persianRed = 0xCC3333FFU,
-    persianRose = 0xFE28A2FFU,
-    persimmon = 0xEC5800FFU,
-    pewterBlue = 0x8BA8B7FFU,
-    phlox = 0xDF00FFFFU,
-    phthaloBlue = 0x000F89FFU,
-    phthaloGreen = 0x123524FFU,
-    picoteeBlue = 0x2E2787FFU,
-    pictorialCarmine = 0xC30B4EFFU,
-    piggyPink = 0xFDDDE6FFU,
-    pineGreen = 0x01796FFFU,
-    pineTree = 0x2A2F23FFU,
-    pink = 0xFFC0CBFFU,
-    pinkFlamingo = 0xFC74FDFFU,
-    pinkLace = 0xFFDDF4FFU,
-    pinkLavender = 0xD8B2D1FFU,
-    pinkSherbet = 0xF78FA7FFU,
-    pistachio = 0x93C572FFU,
-    platinum = 0xE5E4E2FFU,
-    plum = 0x8E4585FFU,
-    plumpPurple = 0x5946B2FFU,
-    polishedPine = 0x5DA493FFU,
-    pompAndPower = 0x86608EFFU,
-    popstar = 0xBE4F62FFU,
-    portlandOrange = 0xFF5A36FFU,
-    powderBlue = 0xB0E0E6FFU,
-    princetonOrange = 0xF58025FFU,
-    processYellow = 0xFFEF00FFU,
-    prune = 0x701C1CFFU,
-    prussianBlue = 0x003153FFU,
-    psychedelicPurple = 0xDF00FFFFU,
-    puce = 0xCC8899FFU,
-    pullmanBrown = 0x644117FFU,
-    pumpkin = 0xFF7518FFU,
-    purple = 0x6A0DADFFU,
-    purpleWeb = 0x800080FFU,
-    purpleMunsell = 0x9F00C5FFU,
-    purpleMountainMajesty = 0x9678B6FFU,
-    purpleNavy = 0x4E5180FFU,
-    purplePizzazz = 0xFE4EDAFFU,
-    purplePlum = 0x9C51B6FFU,
-    purpureus = 0x9A4EAEFFU,
-    queenBlue = 0x436B95FFU,
-    queenPink = 0xE8CCD7FFU,
-    quickSilver = 0xA6A6A6FFU,
-    quinacridoneMagenta = 0x8E3A59FFU,
-    radicalRed = 0xFF355EFFU,
-    raisinBlack = 0x242124FFU,
-    rajah = 0xFBAB60FFU,
-    raspberry = 0xE30B5DFFU,
-    raspberryGlace = 0x915F6DFFU,
-    raspberryRose = 0xB3446CFFU,
-    rawSienna = 0xD68A59FFU,
-    rawUmber = 0x826644FFU,
-    razzleDazzleRose = 0xFF33CCFFU,
-    razzmatazz = 0xE3256BFFU,
-    razzmicBerry = 0x8D4E85FFU,
-    rebeccaPurple = 0x663399FFU,
-    red = 0xFF0000FFU,
-    redCrayola = 0xEE204DFFU,
-    redMunsell = 0xF2003CFFU,
-    redPigment = 0xED1C24FFU,
-    redOrange = 0xFF5349FFU,
-    redOrangeCrayola = 0xFF681FFFU,
-    redPurple = 0xE40078FFU,
-    redSalsa = 0xFD3A4AFFU,
-    redViolet = 0xC71585FFU,
-    redVioletCrayola = 0xC0448FFFU,
-    redwood = 0xA45A52FFU,
-    resolutionBlue = 0x002387FFU,
-    rhythm = 0x777696FFU,
-    richBlack = 0x004040FFU,
-    rifleGreen = 0x444C38FFU,
-    robinEggBlue = 0x00CCCCFFU,
-    rocketMetallic = 0x8A7F80FFU,
-    rojoSpanishRed = 0xA91101FFU,
-    romanSilver = 0x838996FFU,
-    rose = 0xFF007FFFU,
-    roseBonbon = 0xF9429EFFU,
-    roseDust = 0x9E5E6FFFU,
-    roseEbony = 0x674846FFU,
-    roseMadder = 0xE32636FFU,
-    rosePink = 0xFF66CCFFU,
-    rosePompadour = 0xED7A9BFFU,
-    roseQuartz = 0xAA98A9FFU,
-    roseRed = 0xC21E56FFU,
-    roseTaupe = 0x905D5DFFU,
-    roseVale = 0xAB4E52FFU,
-    rosewood = 0x65000BFFU,
-    rossoCorsa = 0xD40000FFU,
-    rosyBrown = 0xBC8F8FFFU,
-    royalBlueDark = 0x002366FFU,
-    royalBlueLight = 0x4169E1FFU,
-    royalPurple = 0x7851A9FFU,
-    royalYellow = 0xFADA5EFFU,
-    ruber = 0xCE4676FFU,
-    rubineRed = 0xD10056FFU,
-    ruby = 0xE0115FFFU,
-    rubyRed = 0x9B111EFFU,
-    rufous = 0xA81C07FFU,
-    russet = 0x80461BFFU,
-    russianGreen = 0x679267FFU,
-    russianViolet = 0x32174DFFU,
-    rust = 0xB7410EFFU,
-    rustyRed = 0xDA2C43FFU,
-    saddleBrown = 0x8B4513FFU,
-    safetyOrange = 0xFF7800FFU,
-    safetyOrangeBlaze = 0xFF6700FFU,
-    safetyYellow = 0xEED202FFU,
-    saffron = 0xF4C430FFU,
-    sage = 0xBCB88AFFU,
-    stPatricksBlue = 0x23297AFFU,
-    salmon = 0xFA8072FFU,
-    salmonPink = 0xFF91A4FFU,
-    sand = 0xC2B280FFU,
-    sandDune = 0x967117FFU,
-    sandyBrown = 0xF4A460FFU,
-    sapGreen = 0x507D2AFFU,
-    sapphire = 0x0F52BAFFU,
-    sapphireBlue = 0x0067A5FFU,
-    sapphireCrayola = 0x0067A5FFU,
-    satinSheenGold = 0xCBA135FFU,
-    scarlet = 0xFF2400FFU,
-    schaussPink = 0xFF91AFFFU,
-    schoolBusYellow = 0xFFD800FFU,
-    screaminGreen = 0x66FF66FFU,
-    seaGreen = 0x2E8B57FFU,
-    seaGreenCrayola = 0x00FFCDFFU,
-    sealBrown = 0x59260BFFU,
-    seashell = 0xFFF5EEFFU,
-    selectiveYellow = 0xFFBA00FFU,
-    sepia = 0x704214FFU,
-    shadow = 0x8A795DFFU,
-    shadowBlue = 0x778BA5FFU,
-    shamrockGreen = 0x009E60FFU,
-    sheenGreen = 0x8FD400FFU,
-    shimmeringBlush = 0xD98695FFU,
-    shinyShamrock = 0x5FA778FFU,
-    shockingPink = 0xFC0FC0FFU,
-    shockingPinkCrayola = 0xFF6FFFFFU,
-    sienna = 0x882D17FFU,
-    silver = 0xC0C0C0FFU,
-    silverCrayola = 0xC9C0BBFFU,
-    silverMetallic = 0xAAA9ADFFU,
-    silverChalice = 0xACACACFFU,
-    silverPink = 0xC4AEADFFU,
-    silverSand = 0xBFC1C2FFU,
-    sinopia = 0xCB410BFFU,
-    sizzlingRed = 0xFF3855FFU,
-    sizzlingSunrise = 0xFFDB00FFU,
-    skobeloff = 0x007474FFU,
-    skyBlue = 0x87CEEBFFU,
-    skyBlueCrayola = 0x76D7EAFFU,
-    skyMagenta = 0xCF71AFFFU,
-    slateBlue = 0x6A5ACDFFU,
-    slateGray = 0x708090FFU,
-    slimyGreen = 0x299617FFU,
-    smitten = 0xC84186FFU,
-    smokyBlack = 0x100C08FFU,
-    snow = 0xFFFAFAFFU,
-    solidPink = 0x893843FFU,
-    sonicSilver = 0x757575FFU,
-    spaceCadet = 0x1D2951FFU,
-    spanishBistre = 0x807532FFU,
-    spanishBlue = 0x0070B8FFU,
-    spanishCarmine = 0xD10047FFU,
-    spanishGray = 0x989898FFU,
-    spanishGreen = 0x009150FFU,
-    spanishOrange = 0xE86100FFU,
-    spanishPink = 0xF7BFBEFFU,
-    spanishRed = 0xE60026FFU,
-    spanishSkyBlue = 0x00FFFFFFU,
-    spanishViolet = 0x4C2882FFU,
-    spanishViridian = 0x007F5CFFU,
-    springBud = 0xA7FC00FFU,
-    springFrost = 0x87FF2AFFU,
-    springGreen = 0x00FF7FFFU,
-    springGreenCrayola = 0xECEBBDFFU,
-    starCommandBlue = 0x007BB8FFU,
-    steelBlue = 0x4682B4FFU,
-    steelPink = 0xCC33CCFFU,
-    steelTeal = 0x5F8A8BFFU,
-    stilDeGrainYellow = 0xFADA5EFFU,
-    straw = 0xE4D96FFFU,
-    strawberry = 0xFA5053FFU,
-    strawberryBlonde = 0xFF9361FFU,
-    sugarPlum = 0x914E75FFU,
-    sunglow = 0xFFCC33FFU,
-    sunray = 0xE3AB57FFU,
-    sunset = 0xFAD6A5FFU,
-    superPink = 0xCF6BA9FFU,
-    sweetBrown = 0xA83731FFU,
-    syracuseOrange = 0xD44500FFU,
-    tan = 0xD2B48CFFU,
-    tanCrayola = 0xD99A6CFFU,
-    tangerine = 0xF28500FFU,
-    tangoPink = 0xE4717AFFU,
-    tartOrange = 0xFB4D46FFU,
-    taupe = 0x483C32FFU,
-    taupeGray = 0x8B8589FFU,
-    teaGreen = 0xD0F0C0FFU,
-    teaRose = 0xF88379FFU,
-    teal = 0x008080FFU,
-    tealBlue = 0x367588FFU,
-    telemagenta = 0xCF3476FFU,
-    tenneTawny = 0xCD5700FFU,
-    terraCotta = 0xE2725BFFU,
-    thistle = 0xD8BFD8FFU,
-    thulianPink = 0xDE6FA1FFU,
-    tickleMePink = 0xFC89ACFFU,
-    tiffanyBlue = 0x0ABAB5FFU,
-    timberwolf = 0xDBD7D2FFU,
-    titaniumYellow = 0xEEE600FFU,
-    tomato = 0xFF6347FFU,
-    tropicalRainforest = 0x00755EFFU,
-    trueBlue = 0x2D68C4FFU,
-    trypanBlue = 0x1C05B3FFU,
-    tumbleweed = 0xDEAA88FFU,
-    turquoise = 0x40E0D0FFU,
-    turquoiseBlue = 0x00FFEFFFU,
-    turquoiseGreen = 0xA0D6B4FFU,
-    turtleGreen = 0x8A9A5BFFU,
-    tuscan = 0xFAD6A5FFU,
-    tuscanBrown = 0x6F4E37FFU,
-    tuscanRed = 0x7C4848FFU,
-    tuscanTan = 0xA67B5BFFU,
-    tuscany = 0xC09999FFU,
-    twilightLavender = 0x8A496BFFU,
-    tyrianPurple = 0x66023CFFU,
-    ultramarine = 0x3F00FFFFU,
-    ultramarineBlue = 0x4166F5FFU,
-    ultraPink = 0xFF6FFFFFU,
-    ultraRed = 0xFC6C85FFU,
-    umber = 0x635147FFU,
-    unbleachedSilk = 0xFFDDCAFFU,
-    unitedNationsBlue = 0x5B92E5FFU,
-    unmellowYellow = 0xFFFF66FFU,
-    upsdellRed = 0xAE2029FFU,
-    uranianBlue = 0xAFDBF5FFU,
-    vanDykeBrown = 0x664228FFU,
-    vanilla = 0xF3E5ABFFU,
-    vanillaIce = 0xF38FA9FFU,
-    vegasGold = 0xC5B358FFU,
-    venetianRed = 0xC80815FFU,
-    verdigris = 0x43B3AEFFU,
-    vermilion = 0xE34234FFU,
-    veronica = 0xA020F0FFU,
-    violet = 0x8F00FFFFU,
-    violetCrayola = 0x963D7FFFU,
-    violetBlue = 0x324AB2FFU,
-    violetBlueCrayola = 0x766EC8FFU,
-    violetRed = 0xF75394FFU,
-    violetWeb = 0xEE82EEFFU,
-    viridian = 0x40826DFFU,
-    viridianGreen = 0x009698FFU,
-    vividBurgundy = 0x9F1D35FFU,
-    vividSkyBlue = 0x00CCFFFFU,
-    vividTangerine = 0xFFA089FFU,
-    vividViolet = 0x9F00FFFFU,
-    volt = 0xCEFF00FFU,
-    warmBlack = 0x004242FFU,
-    weezyBlue = 0x189BCCFFU,
-    wheat = 0xF5DEB3FFU,
-    white = 0xFFFFFFFFU,
-    wildBlueYonder = 0xA2ADD0FFU,
-    wildOrchid = 0xD470A2FFU,
-    wildStrawberry = 0xFF43A4FFU,
-    wildWatermelon = 0xFC6C85FFU,
-    windsorTan = 0xA75502FFU,
-    wine = 0x722F37FFU,
-    wineDregs = 0x673147FFU,
-    winterSky = 0xFF007CFFU,
-    wintergreenDream = 0x56887DFFU,
-    wisteria = 0xC9A0DCFFU,
-    woodBrown = 0xC19A6BFFU,
-    xanadu = 0x738678FFU,
-    xanthic = 0xEEED09FFU,
-    xanthous = 0xF1B42FFFU,
-    yellow = 0xFFFF00FFU,
-    yellowCrayola = 0xFCE883FFU,
-    yellowMunsell = 0xEFCC00FFU,
-    yellowProcess = 0xFFEF00FFU,
-    yellowGreen = 0x9ACD32FFU,
-    yellowGreenCrayola = 0xC5E384FFU,
-    yellowOrange = 0xFFAE42FFU,
-    yellowSunshine = 0xFFF700FFU,
-    zaffre = 0x0014A8FFU,
-    zomp = 0x39A78EFFU
-};
-
-class Color
+class PRALINE_EXPORT Color
 {
 public:
-    using value_type = uint8_t;
+    static const Color absoluteZero;
+    static const Color acidGreen;
+    static const Color aero;
+    static const Color aeroBlue;
+    static const Color africanViolet;
+    static const Color alabaster;
+    static const Color aliceBlue;
+    static const Color alloyOrange;
+    static const Color almond;
+    static const Color amaranth;
+    static const Color amaranthPink;
+    static const Color amaranthPurple;
+    static const Color amaranthRed;
+    static const Color amazon;
+    static const Color amber;
+    static const Color amethyst;
+    static const Color androidGreen;
+    static const Color antiqueBrass;
+    static const Color antiqueBronze;
+    static const Color antiqueFuchsia;
+    static const Color antiqueRuby;
+    static const Color antiqueWhite;
+    static const Color ao;
+    static const Color appleGreen;
+    static const Color apricot;
+    static const Color aqua;
+    static const Color aquamarine;
+    static const Color arcticLime;
+    static const Color armyGreen;
+    static const Color artichoke;
+    static const Color arylideYellow;
+    static const Color ashGray;
+    static const Color asparagus;
+    static const Color atomicTangerine;
+    static const Color auburn;
+    static const Color aureolin;
+    static const Color avocado;
+    static const Color azure;
+    static const Color babyBlue;
+    static const Color babyBlueEyes;
+    static const Color babyPink;
+    static const Color babyPowder;
+    static const Color bakerMillerPink;
+    static const Color bananaMania;
+    static const Color barbiePink;
+    static const Color barnRed;
+    static const Color battleshipGrey;
+    static const Color beauBlue;
+    static const Color beaver;
+    static const Color beige;
+    static const Color bDazzledBlue;
+    static const Color bigDipORuby;
+    static const Color bisque;
+    static const Color bistre;
+    static const Color bistreBrown;
+    static const Color bitterLemon;
+    static const Color bitterLime;
+    static const Color bittersweet;
+    static const Color bittersweetShimmer;
+    static const Color black;
+    static const Color blackBean;
+    static const Color blackChocolate;
+    static const Color blackCoffee;
+    static const Color blackCoral;
+    static const Color blackOlive;
+    static const Color blackShadows;
+    static const Color blanchedAlmond;
+    static const Color blastOffBronze;
+    static const Color bleuDeFrance;
+    static const Color blizzardBlue;
+    static const Color blond;
+    static const Color bloodRed;
+    static const Color blue;
+    static const Color blueCrayola;
+    static const Color blueMunsell;
+    static const Color bluePigment;
+    static const Color blueBell;
+    static const Color blueGray;
+    static const Color blueGreen;
+    static const Color blueJeans;
+    static const Color blueSapphire;
+    static const Color blueViolet;
+    static const Color blueVioletCrayola;
+    static const Color blueYonder;
+    static const Color bluetiful;
+    static const Color blush;
+    static const Color bole;
+    static const Color bone;
+    static const Color bottleGreen;
+    static const Color brandy;
+    static const Color brickRed;
+    static const Color brightGreen;
+    static const Color brightLilac;
+    static const Color brightMaroon;
+    static const Color brightNavyBlue;
+    static const Color brightYellowCrayola;
+    static const Color brilliantRose;
+    static const Color brinkPink;
+    static const Color britishRacingGreen;
+    static const Color bronze;
+    static const Color brown;
+    static const Color brownSugar;
+    static const Color brunswickGreen;
+    static const Color budGreen;
+    static const Color buff;
+    static const Color burgundy;
+    static const Color burlywood;
+    static const Color burnishedBrown;
+    static const Color burntOrange;
+    static const Color burntSienna;
+    static const Color burntUmber;
+    static const Color byzantine;
+    static const Color byzantium;
+    static const Color cadet;
+    static const Color cadetBlue;
+    static const Color cadetBlueCrayola;
+    static const Color cadetGrey;
+    static const Color cadmiumGreen;
+    static const Color cadmiumOrange;
+    static const Color cadmiumRed;
+    static const Color cadmiumYellow;
+    static const Color cafeAuLait;
+    static const Color cafeNoir;
+    static const Color cambridgeBlue;
+    static const Color camel;
+    static const Color cameoPink;
+    static const Color canary;
+    static const Color canaryYellow;
+    static const Color candyAppleRed;
+    static const Color candyPink;
+    static const Color capri;
+    static const Color caputMortuum;
+    static const Color cardinal;
+    static const Color caribbeanGreen;
+    static const Color carmine;
+    static const Color carnationPink;
+    static const Color carnelian;
+    static const Color carolinaBlue;
+    static const Color carrotOrange;
+    static const Color castletonGreen;
+    static const Color catawba;
+    static const Color cedarChest;
+    static const Color celadon;
+    static const Color celadonBlue;
+    static const Color celadonGreen;
+    static const Color celeste;
+    static const Color celticBlue;
+    static const Color cerise;
+    static const Color cerulean;
+    static const Color ceruleanBlue;
+    static const Color ceruleanFrost;
+    static const Color ceruleanCrayola;
+    static const Color champagne;
+    static const Color champagnePink;
+    static const Color charcoal;
+    static const Color charlestonGreen;
+    static const Color charmPink;
+    static const Color chartreuseTraditional;
+    static const Color chartreuse;
+    static const Color cherryBlossomPink;
+    static const Color chestnut;
+    static const Color chiliRed;
+    static const Color chocolateTraditional;
+    static const Color chocolate;
+    static const Color chocolateCosmos;
+    static const Color chromeYellow;
+    static const Color cinereous;
+    static const Color cinnabar;
+    static const Color cinnamonSatin;
+    static const Color citrine;
+    static const Color citron;
+    static const Color claret;
+    static const Color cobaltBlue;
+    static const Color cocoaBrown;
+    static const Color coconut;
+    static const Color coffee;
+    static const Color columbiaBlue;
+    static const Color congoPink;
+    static const Color coolGrey;
+    static const Color copper;
+    static const Color copperCrayola;
+    static const Color copperPenny;
+    static const Color copperRed;
+    static const Color copperRose;
+    static const Color coquelicot;
+    static const Color coral;
+    static const Color coralPink;
+    static const Color cordovan;
+    static const Color corn;
+    static const Color cornellRed;
+    static const Color cornflowerBlue;
+    static const Color cornsilk;
+    static const Color cosmicCobalt;
+    static const Color cosmicLatte;
+    static const Color coyoteBrown;
+    static const Color cottonCandy;
+    static const Color cream;
+    static const Color crimson;
+    static const Color crystal;
+    static const Color cultured;
+    static const Color cyan;
+    static const Color cyanProcess;
+    static const Color cyberGrape;
+    static const Color cyberYellow;
+    static const Color cyclamen;
+    static const Color darkBlueGray;
+    static const Color darkBrown;
+    static const Color darkByzantium;
+    static const Color darkCornflowerBlue;
+    static const Color darkCyan;
+    static const Color darkElectricBlue;
+    static const Color darkGoldenrod;
+    static const Color darkGreen;
+    static const Color darkJungleGreen;
+    static const Color darkKhaki;
+    static const Color darkLava;
+    static const Color darkLiver;
+    static const Color darkMagenta;
+    static const Color darkMossGreen;
+    static const Color darkOliveGreen;
+    static const Color darkOrange;
+    static const Color darkOrchid;
+    static const Color darkPastelGreen;
+    static const Color darkPurple;
+    static const Color darkRed;
+    static const Color darkSalmon;
+    static const Color darkSeaGreen;
+    static const Color darkSienna;
+    static const Color darkSkyBlue;
+    static const Color darkSlateBlue;
+    static const Color darkSlateGray;
+    static const Color darkSpringGreen;
+    static const Color darkTurquoise;
+    static const Color darkViolet;
+    static const Color dartmouthGreen;
+    static const Color davysGrey;
+    static const Color deepCerise;
+    static const Color deepChampagne;
+    static const Color deepChestnut;
+    static const Color deepJungleGreen;
+    static const Color deepPink;
+    static const Color deepSaffron;
+    static const Color deepSkyBlue;
+    static const Color deepSpaceSparkle;
+    static const Color deepTaupe;
+    static const Color denim;
+    static const Color denimBlue;
+    static const Color desert;
+    static const Color desertSand;
+    static const Color dimGray;
+    static const Color dodgerBlue;
+    static const Color dogwoodRose;
+    static const Color drab;
+    static const Color dukeBlue;
+    static const Color dutchWhite;
+    static const Color earthYellow;
+    static const Color ebony;
+    static const Color ecru;
+    static const Color eerieBlack;
+    static const Color eggplant;
+    static const Color eggshell;
+    static const Color egyptianBlue;
+    static const Color eigengrau;
+    static const Color electricBlue;
+    static const Color electricGreen;
+    static const Color electricIndigo;
+    static const Color electricLime;
+    static const Color electricPurple;
+    static const Color electricViolet;
+    static const Color emerald;
+    static const Color eminence;
+    static const Color englishGreen;
+    static const Color englishLavender;
+    static const Color englishRed;
+    static const Color englishVermillion;
+    static const Color englishViolet;
+    static const Color erin;
+    static const Color etonBlue;
+    static const Color fallow;
+    static const Color faluRed;
+    static const Color fandango;
+    static const Color fandangoPink;
+    static const Color fashionFuchsia;
+    static const Color fawn;
+    static const Color feldgrau;
+    static const Color fernGreen;
+    static const Color fieldDrab;
+    static const Color fieryRose;
+    static const Color firebrick;
+    static const Color fireEngineRed;
+    static const Color fireOpal;
+    static const Color flame;
+    static const Color flax;
+    static const Color flirt;
+    static const Color floralWhite;
+    static const Color fluorescentBlue;
+    static const Color forestGreenCrayola;
+    static const Color forestGreenTraditional;
+    static const Color forestGreen;
+    static const Color frenchBeige;
+    static const Color frenchBistre;
+    static const Color frenchBlue;
+    static const Color frenchFuchsia;
+    static const Color frenchLilac;
+    static const Color frenchLime;
+    static const Color frenchMauve;
+    static const Color frenchPink;
+    static const Color frenchRaspberry;
+    static const Color frenchRose;
+    static const Color frenchSkyBlue;
+    static const Color frenchViolet;
+    static const Color frostbite;
+    static const Color fuchsia;
+    static const Color fuchsiaCrayola;
+    static const Color fuchsiaPurple;
+    static const Color fuchsiaRose;
+    static const Color fulvous;
+    static const Color fuzzyWuzzy;
+    static const Color gainsboro;
+    static const Color gamboge;
+    static const Color genericViridian;
+    static const Color ghostWhite;
+    static const Color glaucous;
+    static const Color glossyGrape;
+    static const Color gold;
+    static const Color goldMetallic;
+    static const Color goldGolden;
+    static const Color goldCrayola;
+    static const Color goldFusion;
+    static const Color goldenBrown;
+    static const Color goldenPoppy;
+    static const Color goldenYellow;
+    static const Color goldenrod;
+    static const Color gothamGreen;
+    static const Color graniteGray;
+    static const Color grannySmithApple;
+    static const Color darkGray;
+    static const Color gray;
+    static const Color green;
+    static const Color greenWeb;
+    static const Color greenCrayola;
+    static const Color greenMunsell;
+    static const Color greenPigment;
+    static const Color greenBlue;
+    static const Color greenBlueCrayola;
+    static const Color greenCyan;
+    static const Color greenLizard;
+    static const Color greenSheen;
+    static const Color greenYellow;
+    static const Color greenYellowCrayola;
+    static const Color grullo;
+    static const Color gunmetal;
+    static const Color hanBlue;
+    static const Color hanPurple;
+    static const Color hansaYellow;
+    static const Color harlequin;
+    static const Color harvestGold;
+    static const Color heatWave;
+    static const Color heliotrope;
+    static const Color heliotropeGray;
+    static const Color hollywoodCerise;
+    static const Color honeydew;
+    static const Color honoluluBlue;
+    static const Color hotMagenta;
+    static const Color hotPink;
+    static const Color hunterGreen;
+    static const Color iceberg;
+    static const Color icterine;
+    static const Color illuminatingEmerald;
+    static const Color imperialRed;
+    static const Color inchworm;
+    static const Color independence;
+    static const Color indiaGreen;
+    static const Color indianRed;
+    static const Color indianYellow;
+    static const Color indigo;
+    static const Color indigoDye;
+    static const Color infrared;
+    static const Color internationalKleinBlue;
+    static const Color internationalOrangeAerospace;
+    static const Color internationalOrangeEngineering;
+    static const Color internationalOrangeGoldenGateBridge;
+    static const Color iris;
+    static const Color irresistible;
+    static const Color isabelline;
+    static const Color italianSkyBlue;
+    static const Color ivory;
+    static const Color jade;
+    static const Color japaneseCarmine;
+    static const Color japaneseViolet;
+    static const Color jasmine;
+    static const Color jazzberryJam;
+    static const Color jet;
+    static const Color jonquil;
+    static const Color juneBud;
+    static const Color jungleGreen;
+    static const Color kellyGreen;
+    static const Color keppel;
+    static const Color keyLime;
+    static const Color khaki;
+    static const Color lightKhaki;
+    static const Color kobe;
+    static const Color kobi;
+    static const Color kobicha;
+    static const Color kombuGreen;
+    static const Color languidLavender;
+    static const Color lapisLazuli;
+    static const Color laserLemon;
+    static const Color laurelGreen;
+    static const Color lava;
+    static const Color lavenderFloral;
+    static const Color lavender;
+    static const Color lavenderBlue;
+    static const Color lavenderBlush;
+    static const Color lavenderGray;
+    static const Color lawnGreen;
+    static const Color lemon;
+    static const Color lemonChiffon;
+    static const Color lemonCurry;
+    static const Color lemonGlacier;
+    static const Color lemonMeringue;
+    static const Color lemonYellow;
+    static const Color lemonYellowCrayola;
+    static const Color liberty;
+    static const Color lightBlue;
+    static const Color lightCoral;
+    static const Color lightCornflowerBlue;
+    static const Color lightCyan;
+    static const Color lightFrenchBeige;
+    static const Color lightGoldenrodYellow;
+    static const Color lightGray;
+    static const Color lightGreen;
+    static const Color lightOrange;
+    static const Color lightPeriwinkle;
+    static const Color lightPink;
+    static const Color lightSalmon;
+    static const Color lightSeaGreen;
+    static const Color lightSkyBlue;
+    static const Color lightSlateGray;
+    static const Color lightSteelBlue;
+    static const Color lightYellow;
+    static const Color lilac;
+    static const Color lilacLuster;
+    static const Color lightLime;
+    static const Color lime;
+    static const Color limeGreen;
+    static const Color lincolnGreen;
+    static const Color linen;
+    static const Color lion;
+    static const Color liseranPurple;
+    static const Color littleBoyBlue;
+    static const Color liver;
+    static const Color liverChestnut;
+    static const Color livid;
+    static const Color macaroniAndCheese;
+    static const Color madderLake;
+    static const Color magenta;
+    static const Color magentaCrayola;
+    static const Color magentaDye;
+    static const Color magentaProcess;
+    static const Color magentaHaze;
+    static const Color magicMint;
+    static const Color magnolia;
+    static const Color mahogany;
+    static const Color maize;
+    static const Color maizeCrayola;
+    static const Color majorelleBlue;
+    static const Color malachite;
+    static const Color manatee;
+    static const Color mandarin;
+    static const Color mango;
+    static const Color mangoTango;
+    static const Color mantis;
+    static const Color mardiGras;
+    static const Color marigold;
+    static const Color maroonCrayola;
+    static const Color maroonWeb;
+    static const Color maroon;
+    static const Color mauve;
+    static const Color mauveTaupe;
+    static const Color mauvelous;
+    static const Color maximumBlue;
+    static const Color maximumBlueGreen;
+    static const Color maximumBluePurple;
+    static const Color maximumGreen;
+    static const Color maximumGreenYellow;
+    static const Color maximumPurple;
+    static const Color maximumRed;
+    static const Color maximumRedPurple;
+    static const Color maximumYellow;
+    static const Color maximumYellowRed;
+    static const Color mayGreen;
+    static const Color mayaBlue;
+    static const Color mediumAquamarine;
+    static const Color mediumBlue;
+    static const Color mediumCandyAppleRed;
+    static const Color mediumCarmine;
+    static const Color mediumChampagne;
+    static const Color mediumOrchid;
+    static const Color mediumPurple;
+    static const Color mediumSeaGreen;
+    static const Color mediumSlateBlue;
+    static const Color mediumSpringGreen;
+    static const Color mediumTurquoise;
+    static const Color mediumVioletRed;
+    static const Color mellowApricot;
+    static const Color mellowYellow;
+    static const Color melon;
+    static const Color metallicGold;
+    static const Color metallicSeaweed;
+    static const Color metallicSunburst;
+    static const Color mexicanPink;
+    static const Color middleBlue;
+    static const Color middleBlueGreen;
+    static const Color middleBluePurple;
+    static const Color middleGrey;
+    static const Color middleGreen;
+    static const Color middleGreenYellow;
+    static const Color middlePurple;
+    static const Color middleRed;
+    static const Color middleRedPurple;
+    static const Color middleYellow;
+    static const Color middleYellowRed;
+    static const Color midnight;
+    static const Color midnightBlue;
+    static const Color midnightGreen;
+    static const Color mikadoYellow;
+    static const Color mimiPink;
+    static const Color mindaro;
+    static const Color ming;
+    static const Color minionYellow;
+    static const Color mint;
+    static const Color mintCream;
+    static const Color mintGreen;
+    static const Color mistyMoss;
+    static const Color mistyRose;
+    static const Color modeBeige;
+    static const Color morningBlue;
+    static const Color mossGreen;
+    static const Color mountainMeadow;
+    static const Color mountbattenPink;
+    static const Color mulberry;
+    static const Color mulberryCrayola;
+    static const Color mustard;
+    static const Color myrtleGreen;
+    static const Color mystic;
+    static const Color mysticMaroon;
+    static const Color nadeshikoPink;
+    static const Color naplesYellow;
+    static const Color navajoWhite;
+    static const Color navyBlue;
+    static const Color navyBlueCrayola;
+    static const Color neonBlue;
+    static const Color neonCarrot;
+    static const Color neonGreen;
+    static const Color neonFuchsia;
+    static const Color newYorkPink;
+    static const Color nickel;
+    static const Color nonPhotoBlue;
+    static const Color nyanza;
+    static const Color oceanBlue;
+    static const Color oceanGreen;
+    static const Color ochre;
+    static const Color oldBurgundy;
+    static const Color oldGold;
+    static const Color oldLace;
+    static const Color oldLavender;
+    static const Color oldMauve;
+    static const Color oldRose;
+    static const Color oldSilver;
+    static const Color olive;
+    static const Color oliveDrab;
+    static const Color oliveGreen;
+    static const Color olivine;
+    static const Color onyx;
+    static const Color opal;
+    static const Color operaMauve;
+    static const Color orange;
+    static const Color orangeCrayola;
+    static const Color orangePeel;
+    static const Color orangeRed;
+    static const Color orangeRedCrayola;
+    static const Color orangeSoda;
+    static const Color orangeYellow;
+    static const Color orangeYellowCrayola;
+    static const Color orchid;
+    static const Color orchidPink;
+    static const Color orchidCrayola;
+    static const Color outerSpaceCrayola;
+    static const Color outrageousOrange;
+    static const Color oxblood;
+    static const Color oxfordBlue;
+    static const Color pacificBlue;
+    static const Color pakistanGreen;
+    static const Color palatinatePurple;
+    static const Color paleAqua;
+    static const Color paleCerulean;
+    static const Color paleDogwood;
+    static const Color palePink;
+    static const Color paleSilver;
+    static const Color paleSpringBud;
+    static const Color pansyPurple;
+    static const Color paoloVeroneseGreen;
+    static const Color papayaWhip;
+    static const Color paradisePink;
+    static const Color parchment;
+    static const Color parisGreen;
+    static const Color pastelPink;
+    static const Color patriarch;
+    static const Color paynesGrey;
+    static const Color peach;
+    static const Color peachCrayola;
+    static const Color peachPuff;
+    static const Color pear;
+    static const Color pearlyPurple;
+    static const Color periwinkle;
+    static const Color periwinkleCrayola;
+    static const Color permanentGeraniumLake;
+    static const Color persianBlue;
+    static const Color persianGreen;
+    static const Color persianIndigo;
+    static const Color persianOrange;
+    static const Color persianPink;
+    static const Color persianPlum;
+    static const Color persianRed;
+    static const Color persianRose;
+    static const Color persimmon;
+    static const Color pewterBlue;
+    static const Color phlox;
+    static const Color phthaloBlue;
+    static const Color phthaloGreen;
+    static const Color picoteeBlue;
+    static const Color pictorialCarmine;
+    static const Color piggyPink;
+    static const Color pineGreen;
+    static const Color pineTree;
+    static const Color pink;
+    static const Color pinkFlamingo;
+    static const Color pinkLace;
+    static const Color pinkLavender;
+    static const Color pinkSherbet;
+    static const Color pistachio;
+    static const Color platinum;
+    static const Color plum;
+    static const Color plumpPurple;
+    static const Color polishedPine;
+    static const Color pompAndPower;
+    static const Color popstar;
+    static const Color portlandOrange;
+    static const Color powderBlue;
+    static const Color princetonOrange;
+    static const Color processYellow;
+    static const Color prune;
+    static const Color prussianBlue;
+    static const Color psychedelicPurple;
+    static const Color puce;
+    static const Color pullmanBrown;
+    static const Color pumpkin;
+    static const Color purple;
+    static const Color purpleWeb;
+    static const Color purpleMunsell;
+    static const Color purpleMountainMajesty;
+    static const Color purpleNavy;
+    static const Color purplePizzazz;
+    static const Color purplePlum;
+    static const Color purpureus;
+    static const Color queenBlue;
+    static const Color queenPink;
+    static const Color quickSilver;
+    static const Color quinacridoneMagenta;
+    static const Color radicalRed;
+    static const Color raisinBlack;
+    static const Color rajah;
+    static const Color raspberry;
+    static const Color raspberryGlace;
+    static const Color raspberryRose;
+    static const Color rawSienna;
+    static const Color rawUmber;
+    static const Color razzleDazzleRose;
+    static const Color razzmatazz;
+    static const Color razzmicBerry;
+    static const Color rebeccaPurple;
+    static const Color red;
+    static const Color redCrayola;
+    static const Color redMunsell;
+    static const Color redPigment;
+    static const Color redOrange;
+    static const Color redOrangeCrayola;
+    static const Color redPurple;
+    static const Color redSalsa;
+    static const Color redViolet;
+    static const Color redVioletCrayola;
+    static const Color redwood;
+    static const Color resolutionBlue;
+    static const Color rhythm;
+    static const Color richBlack;
+    static const Color rifleGreen;
+    static const Color robinEggBlue;
+    static const Color rocketMetallic;
+    static const Color rojoSpanishRed;
+    static const Color romanSilver;
+    static const Color rose;
+    static const Color roseBonbon;
+    static const Color roseDust;
+    static const Color roseEbony;
+    static const Color roseMadder;
+    static const Color rosePink;
+    static const Color rosePompadour;
+    static const Color roseQuartz;
+    static const Color roseRed;
+    static const Color roseTaupe;
+    static const Color roseVale;
+    static const Color rosewood;
+    static const Color rossoCorsa;
+    static const Color rosyBrown;
+    static const Color royalBlueDark;
+    static const Color royalBlueLight;
+    static const Color royalPurple;
+    static const Color royalYellow;
+    static const Color ruber;
+    static const Color rubineRed;
+    static const Color ruby;
+    static const Color rubyRed;
+    static const Color rufous;
+    static const Color russet;
+    static const Color russianGreen;
+    static const Color russianViolet;
+    static const Color rust;
+    static const Color rustyRed;
+    static const Color saddleBrown;
+    static const Color safetyOrange;
+    static const Color safetyOrangeBlaze;
+    static const Color safetyYellow;
+    static const Color saffron;
+    static const Color sage;
+    static const Color stPatricksBlue;
+    static const Color salmon;
+    static const Color salmonPink;
+    static const Color sand;
+    static const Color sandDune;
+    static const Color sandyBrown;
+    static const Color sapGreen;
+    static const Color sapphire;
+    static const Color sapphireBlue;
+    static const Color sapphireCrayola;
+    static const Color satinSheenGold;
+    static const Color scarlet;
+    static const Color schaussPink;
+    static const Color schoolBusYellow;
+    static const Color screaminGreen;
+    static const Color seaGreen;
+    static const Color seaGreenCrayola;
+    static const Color sealBrown;
+    static const Color seashell;
+    static const Color selectiveYellow;
+    static const Color sepia;
+    static const Color shadow;
+    static const Color shadowBlue;
+    static const Color shamrockGreen;
+    static const Color sheenGreen;
+    static const Color shimmeringBlush;
+    static const Color shinyShamrock;
+    static const Color shockingPink;
+    static const Color shockingPinkCrayola;
+    static const Color sienna;
+    static const Color silver;
+    static const Color silverCrayola;
+    static const Color silverMetallic;
+    static const Color silverChalice;
+    static const Color silverPink;
+    static const Color silverSand;
+    static const Color sinopia;
+    static const Color sizzlingRed;
+    static const Color sizzlingSunrise;
+    static const Color skobeloff;
+    static const Color skyBlue;
+    static const Color skyBlueCrayola;
+    static const Color skyMagenta;
+    static const Color slateBlue;
+    static const Color slateGray;
+    static const Color slimyGreen;
+    static const Color smitten;
+    static const Color smokyBlack;
+    static const Color snow;
+    static const Color solidPink;
+    static const Color sonicSilver;
+    static const Color spaceCadet;
+    static const Color spanishBistre;
+    static const Color spanishBlue;
+    static const Color spanishCarmine;
+    static const Color spanishGray;
+    static const Color spanishGreen;
+    static const Color spanishOrange;
+    static const Color spanishPink;
+    static const Color spanishRed;
+    static const Color spanishSkyBlue;
+    static const Color spanishViolet;
+    static const Color spanishViridian;
+    static const Color springBud;
+    static const Color springFrost;
+    static const Color springGreen;
+    static const Color springGreenCrayola;
+    static const Color starCommandBlue;
+    static const Color steelBlue;
+    static const Color steelPink;
+    static const Color steelTeal;
+    static const Color stilDeGrainYellow;
+    static const Color straw;
+    static const Color strawberry;
+    static const Color strawberryBlonde;
+    static const Color sugarPlum;
+    static const Color sunglow;
+    static const Color sunray;
+    static const Color sunset;
+    static const Color superPink;
+    static const Color sweetBrown;
+    static const Color syracuseOrange;
+    static const Color tan;
+    static const Color tanCrayola;
+    static const Color tangerine;
+    static const Color tangoPink;
+    static const Color tartOrange;
+    static const Color taupe;
+    static const Color taupeGray;
+    static const Color teaGreen;
+    static const Color teaRose;
+    static const Color teal;
+    static const Color tealBlue;
+    static const Color telemagenta;
+    static const Color tenneTawny;
+    static const Color terraCotta;
+    static const Color thistle;
+    static const Color thulianPink;
+    static const Color tickleMePink;
+    static const Color tiffanyBlue;
+    static const Color timberwolf;
+    static const Color titaniumYellow;
+    static const Color tomato;
+    static const Color tropicalRainforest;
+    static const Color trueBlue;
+    static const Color trypanBlue;
+    static const Color tumbleweed;
+    static const Color turquoise;
+    static const Color turquoiseBlue;
+    static const Color turquoiseGreen;
+    static const Color turtleGreen;
+    static const Color tuscan;
+    static const Color tuscanBrown;
+    static const Color tuscanRed;
+    static const Color tuscanTan;
+    static const Color tuscany;
+    static const Color twilightLavender;
+    static const Color tyrianPurple;
+    static const Color ultramarine;
+    static const Color ultramarineBlue;
+    static const Color ultraPink;
+    static const Color ultraRed;
+    static const Color umber;
+    static const Color unbleachedSilk;
+    static const Color unitedNationsBlue;
+    static const Color unmellowYellow;
+    static const Color upsdellRed;
+    static const Color uranianBlue;
+    static const Color vanDykeBrown;
+    static const Color vanilla;
+    static const Color vanillaIce;
+    static const Color vegasGold;
+    static const Color venetianRed;
+    static const Color verdigris;
+    static const Color vermilion;
+    static const Color veronica;
+    static const Color violet;
+    static const Color violetCrayola;
+    static const Color violetBlue;
+    static const Color violetBlueCrayola;
+    static const Color violetRed;
+    static const Color violetWeb;
+    static const Color viridian;
+    static const Color viridianGreen;
+    static const Color vividBurgundy;
+    static const Color vividSkyBlue;
+    static const Color vividTangerine;
+    static const Color vividViolet;
+    static const Color volt;
+    static const Color warmBlack;
+    static const Color weezyBlue;
+    static const Color wheat;
+    static const Color white;
+    static const Color wildBlueYonder;
+    static const Color wildOrchid;
+    static const Color wildStrawberry;
+    static const Color wildWatermelon;
+    static const Color windsorTan;
+    static const Color wine;
+    static const Color wineDregs;
+    static const Color winterSky;
+    static const Color wintergreenDream;
+    static const Color wisteria;
+    static const Color woodBrown;
+    static const Color xanadu;
+    static const Color xanthic;
+    static const Color xanthous;
+    static const Color yellow;
+    static const Color yellowCrayola;
+    static const Color yellowMunsell;
+    static const Color yellowProcess;
+    static const Color yellowGreen;
+    static const Color yellowGreenCrayola;
+    static const Color yellowOrange;
+    static const Color yellowSunshine;
+    static const Color zaffre;
+    static const Color zomp;
 
-    static constexpr auto channelDepth = static_cast<value_type>(0xFF);
-
-    constexpr Color() noexcept : Color{Colors::black}
-    {
-    }
-
-    constexpr Color(const Colors color) noexcept : Color{static_cast<uint32_t>(color)}
+    constexpr Color() noexcept : Color{0x000000FFu}
     {
     }
 
     constexpr explicit Color(const uint32_t rgba) noexcept
-        : Color{static_cast<value_type>((rgba >> 24) & 0xFFu), static_cast<value_type>((rgba >> 16) & 0xFFu),
-                static_cast<value_type>((rgba >> 8) & 0xFFu), static_cast<value_type>(rgba & 0xFFu)}
+        : Color{static_cast<uint8_t>((rgba >> 24) & 0xFFu), static_cast<uint8_t>((rgba >> 16) & 0xFFu),
+                static_cast<uint8_t>((rgba >> 8) & 0xFFu), static_cast<uint8_t>(rgba & 0xFFu)}
     {
     }
 
-    constexpr Color(const value_type red, const value_type green, const value_type blue,
-                    const value_type alpha = channelDepth) noexcept
-        : red_{red}, green_{green}, blue_{blue}, alpha_{alpha}
+    constexpr Color(const uint8_t redChannel, const uint8_t greenChannel, const uint8_t blueChannel,
+                    const uint8_t alphaChannel = 0xFFu) noexcept
+        : redChannel_{redChannel}, greenChannel_{greenChannel}, blueChannel_{blueChannel}, alphaChannel_{alphaChannel}
     {
     }
 
-    constexpr uint32_t code() const noexcept
+    constexpr uint32_t getCode() const noexcept
     {
-        return (red_ << 24) | (green_ << 16) | (blue_ << 8) | alpha_;
+        return (redChannel_ << 24) | (greenChannel_ << 16) | (blueChannel_ << 8) | alphaChannel_;
     }
 
-    constexpr value_type red() const noexcept
+    constexpr uint8_t getRedChannel() const noexcept
     {
-        return red_;
+        return redChannel_;
     }
 
-    constexpr value_type green() const noexcept
+    constexpr uint8_t getGreenChannel() const noexcept
     {
-        return green_;
+        return greenChannel_;
     }
 
-    constexpr value_type blue() const noexcept
+    constexpr uint8_t getBlueChannel() const noexcept
     {
-        return blue_;
+        return blueChannel_;
     }
 
-    constexpr value_type alpha() const noexcept
+    constexpr uint8_t getAlphaChannel() const noexcept
     {
-        return alpha_;
+        return alphaChannel_;
     }
+
+    std::string toString() const;
+
+    void toStream(std::ostream& stream) const;
 
 private:
-    value_type red_;
-    value_type green_;
-    value_type blue_;
-    value_type alpha_;
+    uint8_t redChannel_;
+    uint8_t greenChannel_;
+    uint8_t blueChannel_;
+    uint8_t alphaChannel_;
 };
 
-constexpr bool operator==(const Color lhs, const Color rhs)
+constexpr bool operator==(const Color& left, const Color& right)
 {
-    return lhs.code() == rhs.code();
+    return left.getCode() == right.getCode();
 }
 
-constexpr bool operator!=(const Color lhs, const Color rhs)
+constexpr bool operator!=(const Color& left, const Color& right)
 {
-    return !(lhs == rhs);
+    return !(left == right);
 }
 
-PRALINE_EXPORT std::ostream& operator<<(std::ostream& stream, const Color color);
+inline std::ostream& operator<<(std::ostream& stream, const Color& color)
+{
+    color.toStream(stream);
+    return stream;
+}
 
 }
 
-namespace std
-{
 template<>
-struct hash<dansandu::canvas::color::Color>
+struct std::hash<dansandu::canvas::color::Color>
 {
     std::size_t operator()(const dansandu::canvas::color::Color& color) const
     {
-        return std::hash<decltype(color.code())>{}(color.code());
+        return std::hash<decltype(color.getCode())>{}(color.getCode());
     }
 };
-}
