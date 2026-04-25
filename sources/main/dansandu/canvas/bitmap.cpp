@@ -81,9 +81,9 @@ void writeBitmapFile(const std::string& path, const Image& image)
         for (auto w = 0; w < image.width(); ++w)
         {
             const auto color = image(w, image.height() - h - 1);
-            bytes[index] = color.blue();
-            bytes[index + 1] = color.green();
-            bytes[index + 2] = color.red();
+            bytes[index] = color.getBlueChannel();
+            bytes[index + 1] = color.getGreenChannel();
+            bytes[index + 2] = color.getRedChannel();
             index += 3;
         }
         index += padding;

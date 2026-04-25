@@ -2,7 +2,6 @@
 
 #include "dansandu/canvas/color.hpp"
 #include "dansandu/journey/exception.hpp"
-#include "dansandu/math/matrix.hpp"
 
 #include <algorithm>
 #include <vector>
@@ -15,7 +14,6 @@ class Image
 public:
     using size_type = int;
     using Color = dansandu::canvas::color::Color;
-    using Colors = dansandu::canvas::color::Colors;
     using const_iterator = std::vector<Color>::const_iterator;
     using iterator = std::vector<Color>::iterator;
 
@@ -23,7 +21,7 @@ public:
     {
     }
 
-    Image(const size_type width, const size_type height) : Image{width, height, Colors::black}
+    Image(const size_type width, const size_type height) : Image{width, height, Color::black}
     {
     }
 
@@ -32,8 +30,7 @@ public:
     {
     }
 
-    Image(const size_type width, const size_type height, std::vector<Color> colors)
-        : width_{width}, height_{height}, colors_{std::move(colors)}
+    Image(const size_type width, const size_type height, std::vector<Color> colors) : width_{width}, height_{height}
     {
         if (width_ < 0 || height_ < 0)
         {
@@ -41,15 +38,17 @@ public:
                   " must be greater than or equal to zero");
         }
 
-        if (width_ * height_ != static_cast<int>(colors_.size()))
+        if (width_ * height_ != static_cast<int>(colors.size()))
         {
-            THROW(std::invalid_argument, "colors size ", colors_.size(), " must match image area ", width_ * height_);
+            THROW(std::invalid_argument, "colors size ", colors.size(), " must match image area ", width_ * height_);
         }
 
         if (width_ == 0 || height_ == 0)
         {
             width_ = height_ = 0;
         }
+
+        colors_ = std::move(colors);
     }
 
     Image(const Image&) = default;
@@ -59,14 +58,29 @@ public:
         other.width_ = other.height_ = 0;
     }
 
-    Image& operator=(const Image&) = default;
+    Image& operator=(const Image& other)
+    {
+        if (this != &other)
+        {
+            width_ = other.width_;
+            height_ = other.height_;
+            colors_ = other.colors_;
+        }
+
+        return *this;
+    }
 
     Image& operator=(Image&& other) noexcept
     {
-        width_ = other.width_;
-        height_ = other.height_;
-        colors_ = std::move(other.colors_);
-        other.width_ = other.height_ = 0;
+        if (this != &other)
+        {
+            width_ = other.width_;
+            height_ = other.height_;
+            colors_ = std::move(other.colors_);
+
+            other.width_ = other.height_ = 0;
+        }
+
         return *this;
     }
 
@@ -80,17 +94,17 @@ public:
         return colors_[index(x, y)];
     }
 
-    Color& operator()(const dansandu::math::matrix::ConstantMatrixView<size_type, 1, 2> point)
+    Color& clampedIndex(const size_type x, const size_type y)
     {
-        return colors_[index(point.x(), point.y())];
+        return colors_[getClampedIndex(x, y)];
     }
 
-    const Color& operator()(const dansandu::math::matrix::ConstantMatrixView<size_type, 1, 2> point) const
+    const Color& clampedIndex(const size_type x, const size_type y) const
     {
-        return colors_[index(point.x(), point.y())];
+        return colors_[getClampedIndex(x, y)];
     }
 
-    void clear(const Color color = Colors::black)
+    void clear(const Color color = Color::black)
     {
         std::fill(colors_.begin(), colors_.end(), color);
     }
@@ -153,12 +167,30 @@ public:
 private:
     size_type index(const size_type x, const size_type y) const
     {
-        if (x < 0 || x >= width_ || y < 0 || y >= height_)
+        if ((x < 0) | (x >= width_) | (y < 0) | (y >= height_))
         {
             THROW(std::out_of_range, "cannot index the (", x, ", ", y, ") pixel in an ", width_, "x", height_,
                   " image -- indices are out of bounds");
         }
         return x + y * width_;
+    }
+
+    size_type getClampedIndex(const size_type x, const size_type y) const
+    {
+        if ((width_ == 0) | (height_ == 0))
+        {
+            THROW(std::out_of_range, "Cannot index an empty image");
+        }
+
+        const auto xAboveZero = (x > 0);
+        const auto xBelowWidth = (x < width_);
+        const auto cx = (xAboveZero & xBelowWidth) * x + !xBelowWidth * (width_ - 1);
+
+        const auto yAboveZero = (y > 0);
+        const auto yBelowHeight = (y < height_);
+        const auto cy = (yAboveZero & yBelowHeight) * y + !yBelowHeight * (height_ - 1);
+
+        return cx + cy * width_;
     }
 
     size_type width_;

@@ -3,9 +3,6 @@ artifact: canvas
 version: 1.0.0
 dependencies:
 - organization: dansandu
-  artifact: math
-  version: 1.+0.+0.SNAPSHOT
-- organization: dansandu
   artifact: ballotin
   version: 1.+0.+0.SNAPSHOT
 - organization: dansandu

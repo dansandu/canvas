@@ -4,93 +4,87 @@
 #include <sstream>
 
 using dansandu::canvas::color::Color;
-using dansandu::canvas::color::Colors;
 
 TEST_CASE("color")
 {
     SECTION("code channels")
     {
-        const auto code = 0xF5654321U;
+        const auto code = 0xF5654321u;
         const auto color = Color{code};
 
-        REQUIRE(color.red() == 0xF5U);
-        REQUIRE(color.green() == 0x65U);
-        REQUIRE(color.blue() == 0x43U);
-        REQUIRE(color.alpha() == 0x21U);
-        REQUIRE(color.code() == code);
+        REQUIRE(color.getRedChannel() == 0xF5u);
+        REQUIRE(color.getGreenChannel() == 0x65u);
+        REQUIRE(color.getBlueChannel() == 0x43u);
+        REQUIRE(color.getAlphaChannel() == 0x21u);
+        REQUIRE(color.getCode() == code);
     }
 
     SECTION("equality")
     {
-        const auto red = Color{Colors::red};
-        const auto green = Color{Colors::green};
+        REQUIRE(Color::red == Color::red);
 
-        REQUIRE(red == red);
-
-        REQUIRE(red != green);
+        REQUIRE(Color::red != Color::green);
     }
 
     SECTION("red channel")
     {
-        const auto color = Color{Colors::red};
+        const auto color = Color::red;
 
-        REQUIRE(color.red() == 255);
-        REQUIRE(color.green() == 0);
-        REQUIRE(color.blue() == 0);
-        REQUIRE(color.code() == 0xFF0000FFu);
+        REQUIRE(color.getRedChannel() == 255);
+        REQUIRE(color.getGreenChannel() == 0);
+        REQUIRE(color.getBlueChannel() == 0);
+        REQUIRE(color.getCode() == 0xFF0000FFu);
     }
 
     SECTION("green channel")
     {
-        const auto color = Color{Colors::green};
+        const auto color = Color::green;
 
-        REQUIRE(color.red() == 0);
-        REQUIRE(color.green() == 255);
-        REQUIRE(color.blue() == 0);
-        REQUIRE(color.code() == 0x00FF00FFu);
+        REQUIRE(color.getRedChannel() == 0);
+        REQUIRE(color.getGreenChannel() == 0xFFu);
+        REQUIRE(color.getBlueChannel() == 0);
+        REQUIRE(color.getAlphaChannel() == 0xFFu);
+        REQUIRE(color.getCode() == 0x00FF00FFu);
     }
 
     SECTION("blue channel")
     {
-        const auto color = Color{Colors::blue};
+        const auto color = Color::blue;
 
-        REQUIRE(color.red() == 0);
-        REQUIRE(color.green() == 0);
-        REQUIRE(color.blue() == 255);
-        REQUIRE(color.alpha() == 255);
-        REQUIRE(color.code() == 0x0000FFFFu);
+        REQUIRE(color.getRedChannel() == 0);
+        REQUIRE(color.getGreenChannel() == 0);
+        REQUIRE(color.getBlueChannel() == 0xFFu);
+        REQUIRE(color.getAlphaChannel() == 0xFFu);
+        REQUIRE(color.getCode() == 0x0000FFFFu);
     }
 
     SECTION("alpha channel")
     {
-        const auto color = Color{Colors::black};
+        const auto color = Color::black;
 
-        REQUIRE(color.red() == 0);
-        REQUIRE(color.green() == 0);
-        REQUIRE(color.blue() == 0);
-        REQUIRE(color.alpha() == 255);
-        REQUIRE(color.code() == 0x000000FFu);
+        REQUIRE(color.getRedChannel() == 0);
+        REQUIRE(color.getGreenChannel() == 0);
+        REQUIRE(color.getBlueChannel() == 0);
+        REQUIRE(color.getAlphaChannel() == 0xFFu);
+        REQUIRE(color.getCode() == 0x000000FFu);
     }
 
     SECTION("color from code")
     {
-        REQUIRE(Colors::magenta == Color{0xFF00FFFFu});
+        REQUIRE(Color::magenta == Color{0xFF00FFFFu});
     }
 
     SECTION("hash")
     {
-        const auto color = Color{Colors::rust};
+        const auto color = Color::rust;
         const auto actualHash = std::hash<Color>{}(color);
-        const auto expectedHash = std::hash<uint32_t>{}(static_cast<uint32_t>(Colors::rust));
+        const auto expectedHash = std::hash<uint32_t>{}(Color::rust.getCode());
 
         REQUIRE(actualHash == expectedHash);
     }
 
     SECTION("string")
     {
-        auto stream = std::stringstream{};
-        stream << Colors::khaki;
-
-        REQUIRE(stream.str() == "#C3B091FF");
+        REQUIRE(Color::khaki.toString() == "#C3B091FF");
     }
 }

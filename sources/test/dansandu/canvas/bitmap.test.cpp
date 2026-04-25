@@ -8,7 +8,7 @@
 using dansandu::ballotin::string::format;
 using dansandu::canvas::bitmap::readBitmapFile;
 using dansandu::canvas::bitmap::writeBitmapFile;
-using dansandu::canvas::color::Colors;
+using dansandu::canvas::color::Color;
 using dansandu::canvas::image::Image;
 
 namespace
@@ -37,12 +37,12 @@ TEST_CASE("bitmap")
     SECTION("rgb")
     {
         auto image = Image{2, 3};
-        image(0, 0) = Colors::red;
-        image(1, 0) = Colors::green;
-        image(0, 1) = Colors::blue;
-        image(1, 1) = Colors::magenta;
-        image(0, 2) = Colors::pink;
-        image(1, 2) = Colors::darkGreen;
+        image(0, 0) = Color::red;
+        image(1, 0) = Color::green;
+        image(0, 1) = Color::blue;
+        image(1, 1) = Color::magenta;
+        image(0, 2) = Color::pink;
+        image(1, 2) = Color::darkGreen;
 
         REQUIRE(checkBitmap(image, "rgb.bmp"));
     }
@@ -56,7 +56,7 @@ TEST_CASE("bitmap")
         {
             for (auto x = 0; x < image.width(); ++x)
             {
-                image(x, y) = (x / squareSize + y / squareSize) % 2 ? Colors::white : Colors::turquoise;
+                image(x, y) = (x / squareSize + y / squareSize) % 2 ? Color::white : Color::turquoise;
             }
         }
 
