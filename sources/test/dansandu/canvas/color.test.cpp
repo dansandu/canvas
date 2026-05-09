@@ -21,14 +21,18 @@ TEST_CASE("color")
 
     SECTION("equality")
     {
-        REQUIRE(Color::red == Color::red);
+        const Color red = Color::red;
 
-        REQUIRE(Color::red != Color::green);
+        const Color green = Color::green;
+
+        REQUIRE(red == red);
+
+        REQUIRE(red != green);
     }
 
     SECTION("red channel")
     {
-        const auto color = Color::red;
+        const Color color = Color::red;
 
         REQUIRE(color.getRedChannel() == 255);
         REQUIRE(color.getGreenChannel() == 0);
@@ -38,7 +42,7 @@ TEST_CASE("color")
 
     SECTION("green channel")
     {
-        const auto color = Color::green;
+        const Color color = Color::green;
 
         REQUIRE(color.getRedChannel() == 0);
         REQUIRE(color.getGreenChannel() == 0xFFu);
@@ -49,7 +53,7 @@ TEST_CASE("color")
 
     SECTION("blue channel")
     {
-        const auto color = Color::blue;
+        const Color color = Color::blue;
 
         REQUIRE(color.getRedChannel() == 0);
         REQUIRE(color.getGreenChannel() == 0);
@@ -60,31 +64,41 @@ TEST_CASE("color")
 
     SECTION("alpha channel")
     {
-        const auto color = Color::black;
+        const Color color = Color::black;
 
         REQUIRE(color.getRedChannel() == 0);
+
         REQUIRE(color.getGreenChannel() == 0);
+
         REQUIRE(color.getBlueChannel() == 0);
+
         REQUIRE(color.getAlphaChannel() == 0xFFu);
+
         REQUIRE(color.getCode() == 0x000000FFu);
     }
 
     SECTION("color from code")
     {
-        REQUIRE(Color::magenta == Color{0xFF00FFFFu});
+        const Color color = Color::magenta;
+
+        REQUIRE(color == Color{0xFF00FFFFu});
     }
 
     SECTION("hash")
     {
-        const auto color = Color::rust;
+        const Color color = Color::rust;
+
         const auto actualHash = std::hash<Color>{}(color);
-        const auto expectedHash = std::hash<uint32_t>{}(Color::rust.getCode());
+
+        const auto expectedHash = std::hash<uint32_t>{}(color.getCode());
 
         REQUIRE(actualHash == expectedHash);
     }
 
     SECTION("string")
     {
-        REQUIRE(Color::khaki.toString() == "#C3B091FF");
+        const Color color = Color::khaki;
+
+        REQUIRE(color.toString() == "#C3B091FF");
     }
 }
