@@ -37,6 +37,12 @@ bool checkGifImage(const BytesType& actual, const std::string& fileName)
     return true;
 }
 
+template<typename View>
+auto toVector(const View& view)
+{
+    return std::vector<decltype(*view.begin())>(view.begin(), view.end());
+}
+
 }
 
 TEST_CASE("gif")
@@ -82,8 +88,8 @@ TEST_CASE("gif")
 
             // Output: 000 10000 | 1 10010 00 | 0100 0000 | 10 00101 0 | 10011 001 | 000 10001
 
-            const auto input = symbols | std::views::transform([](auto c) { return static_cast<int>(c - 'A'); }) |
-                               std::ranges::to<std::vector>();
+            const auto input =
+                toVector(symbols | std::views::transform([](auto c) { return static_cast<int>(c - 'A'); }));
 
             const auto& [output, minimumCodeSize] = lzw(input, alphabetSize);
 
@@ -133,19 +139,17 @@ TEST_CASE("gif")
                               0xFF, 0x00, 0x00, 0x00, 0xFF, 0x02, 0x05, 0x44, 0x2E, 0x17, 0xA3, 0x5A, 0x00, 0x3B}};
 
         const auto binary = getGifBinary(image);
-        const auto actual = binary | std::views::transform(toInt) | std::ranges::to<std::vector>();
+        const auto actual = toVector(binary | std::views::transform(toInt));
 
         REQUIRE(expected == actual);
     }
 
     SECTION("small animation")
     {
-        const auto images = std::vector<Color>{{Color::red, Color::green, Color::blue}} |
-                            std::views::transform([](const auto color) { return Image{5, 5, color}; }) |
-                            std::ranges::to<std::vector>();
+        const auto images = toVector(std::vector<Color>{{Color::red, Color::green, Color::blue}} |
+                                     std::views::transform([](const auto color) { return Image{5, 5, color}; }));
 
-        const auto frames =
-            images | std::views::transform([](const auto& image) { return &image; }) | std::ranges::to<std::vector>();
+        const auto frames = toVector(images | std::views::transform([](const auto& image) { return &image; }));
 
         const auto periodCentiseconds = 100;
 
@@ -161,7 +165,7 @@ TEST_CASE("gif")
              0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x04, 0x84, 0x8F, 0xA9, 0x58, 0x00, 0x3B}};
 
         const auto binary = getGifBinary(frames, periodCentiseconds);
-        const auto actual = binary | std::views::transform(toInt) | std::ranges::to<std::vector>();
+        const auto actual = toVector(binary | std::views::transform(toInt));
 
         REQUIRE(expected == actual);
     }
@@ -201,8 +205,7 @@ TEST_CASE("gif")
                                                 readBitmapFile("resources/test/dansandu/canvas/frame7.bmp"),
                                                 readBitmapFile("resources/test/dansandu/canvas/frame8.bmp")}};
 
-        const auto frames =
-            images | std::views::transform([](const auto& image) { return &image; }) | std::ranges::to<std::vector>();
+        const auto frames = toVector(images | std::views::transform([](const auto& image) { return &image; }));
 
         const auto delayCentiseconds = 20;
 

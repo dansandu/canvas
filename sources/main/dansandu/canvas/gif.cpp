@@ -6,6 +6,7 @@
 #include "dansandu/journey/logging.hpp"
 
 #include <algorithm>
+#include <cmath>
 #include <vector>
 
 using dansandu::ballotin::binary::pushBitsLeastSignificant;
